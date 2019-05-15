@@ -12,11 +12,10 @@ namespace RecordParser
         static void Main(string[] args)
         {
             Console.WriteLine("Start");
-            var objectList = new List<Person>();
-            // read file, split by line => List<string>
-            //// make generic, 3 file types
+            var objectList = new List<Person>();            
             var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParseApp\\RecordParseApp\\RecordFile.txt";
             var delimArray = new char[] { '|', ',', ' ' };
+
             var recordDictionary = ReadFileAndSplitByDelim(filePath, delimArray);
 
             for (var i = 0; i < recordDictionary.Count; i++)
@@ -24,7 +23,8 @@ namespace RecordParser
                 objectList.Add(MakePersonFromStringList(recordDictionary[i]));
             }
 
-
+            // read file, split by line => List<string>
+            //// make generic, 3 file types
 
             // Validate and trim safe strings and parse date, then make Person obj.
             //// If line not valid, add to 'invalidList' -- separate by some escape character maybe? Or separate files?
@@ -34,8 +34,8 @@ namespace RecordParser
             // Has to be available for api
 
             //var pipeDelimLines = File.ReadAllLines("");
-            var commaDelimStringList = new List<string>();
-            var spaceDelimStringList = new List<string>();
+            //var commaDelimStringList = new List<string>();
+            //var spaceDelimStringList = new List<string>();
 
             Output1(objectList);
             Console.WriteLine();
@@ -43,50 +43,68 @@ namespace RecordParser
             Console.WriteLine();
             Output3(objectList);
 
+            Console.WriteLine("\n\n Finished");
             Console.ReadKey();
         }
 
         public static void Output1(List<Person> personList)
         {
-            var sortedList = (from p in personList
-                              orderby p.Gender, p.LastName ascending
-                              select p).ToList();
-            sortedList.ForEach(x =>
-                Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                                $"{x.LastName}, {x.FirstName}",
-                                x.Gender,
-                                x.FavoriteColor,
-                                x.DateOfBirth.ToString("M/D/YYYY"))
-            );
-
+            try
+            {
+                var sortedList = (from p in personList
+                                  orderby p.Gender, p.LastName ascending
+                                  select p).ToList();
+                sortedList.ForEach(x => WriteFormattedRecord(x));
+            }
+            catch (Exception e)
+            {
+                var message = "Exception thrown while writing Output1";
+                WriteExceptionMessage(e, "Output1", message);
+            }
         }
 
         public static void Output2(List<Person> personList)
         {
-            var sortedList = (from p in personList
-                              orderby p.DateOfBirth ascending
-                              select p).ToList();
-            sortedList.ForEach(x =>
-                Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                                $"{x.LastName}, {x.FirstName}",
-                                x.Gender,
-                                x.FavoriteColor,
-                                x.DateOfBirth.ToString("M/D/YYYY"))
-            );
+            try
+            {
+                var sortedList = (from p in personList
+                                  orderby p.DateOfBirth ascending
+                                  select p).ToList();
+                sortedList.ForEach(x => WriteFormattedRecord(x));
+            }
+            catch (Exception e)
+            {
+                var message = "Exception thrown while writing Output2";
+                WriteExceptionMessage(e, "Output2", message);
+            }
         }
 
         public static void Output3(List<Person> personList)
         {
-            var sortedList = (from p in personList
-                              orderby p.LastName descending
-                              select p).ToList();
-            sortedList.ForEach(x =>
-                Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                                $"{x.LastName}, {x.FirstName}",
-                                x.Gender,
-                                x.FavoriteColor,
-                                x.DateOfBirth.ToString("M/d/yyyy"))
-            );
+            try
+            {
+                //var sortedList2 = personList.Select(x => x).OrderBy(x => x.LastName).ToList();
+                var sortedList = (from p in personList
+                                  orderby p.LastName descending
+                                  select p).ToList();
+
+                sortedList.ForEach(x => WriteFormattedRecord(x) );
+            }
+            catch (Exception e)
+            {
+                var message = "Exception thrown while writing Output3";
+                WriteExceptionMessage(e, "Output3", message);
+            }
+        }
+
+        public static void WriteFormattedRecord(Person person)
+        {
+            
+            Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
+                                    $"{person.LastName}, {person.FirstName}",
+                                    person.Gender,
+                                    person.FavoriteColor,
+                                    person.DateOfBirth.ToString("M/d/yyyy"));
         }
 
         public static string SafeString(object obj, bool trimString = true)
@@ -159,7 +177,7 @@ namespace RecordParser
         public static DateTime ParseDateString(string dateString)
         {
             DateTime.TryParse(dateString, out DateTime result);
-            if (result == DateTime.MinValue)
+            if (result == null || result == DateTime.MinValue)
             {
                 return new DateTime();
             }
