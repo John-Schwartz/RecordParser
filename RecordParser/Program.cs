@@ -9,11 +9,11 @@ namespace RecordParser
 {
     class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Start");
             var objectList = new List<Person>();            
-            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParseApp\\RecordParseApp\\RecordFile.txt";
+            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
             var delimArray = new char[] { '|', ',', ' ' };
 
             var recordDictionary = ReadFileAndSplitByDelim(filePath, delimArray);
@@ -126,9 +126,12 @@ namespace RecordParser
         public static Person MakePersonFromStringList(List<string> recordStringFields)
         {
             var newPerson = new Person();
-
+            
             try
             {
+                
+                
+
                 newPerson = new Person
                 {
                     LastName = SafeString(recordStringFields[0]),
@@ -137,6 +140,7 @@ namespace RecordParser
                     FavoriteColor = SafeString(recordStringFields[3]),
                     DateOfBirth = ParseDateString(recordStringFields[4])
                 };
+
             }
             catch (Exception e)
             {
@@ -150,6 +154,12 @@ namespace RecordParser
 
         public static Dictionary<int, List<string>> ReadFileAndSplitByDelim(string path, char[] delim)
         {
+            if (path == null || path == string.Empty || !System.IO.File.Exists(path))
+            {
+                Console.WriteLine("Invalid path");
+                return new Dictionary<int, List<string>>();
+            }
+
             var recordArrayDict = new Dictionary<int, List<string>>();
             try
             {
@@ -159,8 +169,11 @@ namespace RecordParser
                 foreach (var recordString in allLines)
                 {
                     if (recordString == string.Empty) { continue; }
+
                     var splitStringObject = recordString.Split(delim).ToList();
-                    var validObj = splitStringObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+                    //TODO: Can't currently take dates of format "Feb 21 1990"
+                    var DelimChars = splitStringObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+
                     recordArrayDict.Add(counter, splitStringObject);
                     counter++;
                 }
@@ -179,7 +192,7 @@ namespace RecordParser
             DateTime.TryParse(dateString, out DateTime result);
             if (result == null || result == DateTime.MinValue)
             {
-                return new DateTime();
+                return DateTime.MinValue;
             }
             return result;
         }
@@ -192,7 +205,7 @@ namespace RecordParser
 
     }
 
-    class Person
+    public class Person
     {
         public string LastName { get; set; }
         public string FirstName { get; set; }

@@ -1,0 +1,7 @@
+LastName | FirstName | Gender | FavoriteColor | DateOfBirth
+LastName2, FirstName, Gender, FavoriteColor, DateOfBirth 
+LastName3 FirstName Gender FavoriteColor DateOfBirth      
+
+Doe | John | M | Purple | 11/26/1992
+Doe2, John, M, Purple, 11/26/1992
+Doe3 John M Purple 11/26/1992    
