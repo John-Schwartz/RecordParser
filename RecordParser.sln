@@ -7,6 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParser", "RecordParse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTfulAPI", "RESTfulAPI\RESTfulAPI.csproj", "{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParserTests", "RecordParserTests\RecordParserTests.csproj", "{6254D218-33F3-4E26-87A2-FF893D981993}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35DD5CE7-0D1F-4376-995C-69C74715E809} = {35DD5CE7-0D1F-4376-995C-69C74715E809}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +26,10 @@ Global
 		{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6254D218-33F3-4E26-87A2-FF893D981993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6254D218-33F3-4E26-87A2-FF893D981993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6254D218-33F3-4E26-87A2-FF893D981993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6254D218-33F3-4E26-87A2-FF893D981993}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
