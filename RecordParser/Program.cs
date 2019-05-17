@@ -12,7 +12,7 @@ namespace RecordParser
         public static void Main(string[] args)
         {
             Console.WriteLine("Start");
-            var objectList = new List<Person>();            
+            var objectList = new List<Person>();
             var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
             var delimArray = new char[] { '|', ',', ' ' };
 
@@ -88,7 +88,7 @@ namespace RecordParser
                                   orderby p.LastName descending
                                   select p).ToList();
 
-                sortedList.ForEach(x => WriteFormattedRecord(x) );
+                sortedList.ForEach(x => WriteFormattedRecord(x));
             }
             catch (Exception e)
             {
@@ -99,7 +99,7 @@ namespace RecordParser
 
         public static void WriteFormattedRecord(Person person)
         {
-            
+
             Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
                                     $"{person.LastName}, {person.FirstName}",
                                     person.Gender,
@@ -126,12 +126,9 @@ namespace RecordParser
         public static Person MakePersonFromStringList(List<string> recordStringFields)
         {
             var newPerson = new Person();
-            
+
             try
             {
-                
-                
-
                 newPerson = new Person
                 {
                     LastName = SafeString(recordStringFields[0]),
@@ -213,4 +210,19 @@ namespace RecordParser
         public string FavoriteColor { get; set; }
         public DateTime DateOfBirth { get; set; }
     }
+
+    //public class ParseHelper
+    //{
+
+    //    public IEnumerable<string> ReadFileLineAndReturnAsStringArray(string filePath)
+    //    {
+    //        if (filePath == string.Empty || filePath == null || !File.Exists(filePath))
+    //        {
+    //            Console.WriteLine("\nFile path is invalid.\n");
+    //            return null;
+    //        }
+    //        return File.ReadAllLines(filePath);
+    //    }
+    //}
 }
+
