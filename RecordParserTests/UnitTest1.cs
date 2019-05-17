@@ -15,16 +15,23 @@ namespace RecordParserTests
 
 
         // Given a file path, read the lines, and parse each line by delimiter
-        public void ReadFileAndSplitByDelim_HappyPath()
+        [TestMethod]
+        public void ReadFileAndSplitByDelimTest_ValidFilePath()
+        {
+            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
+            Assert.IsTrue(File.Exists(filePath));
+        }
+
+        [TestMethod]
+        public void SafeStringTest()
         {
             var helper = new ParseHelper();
-            var delimArray = new char[] { '|', ',', ' ' };
-
-            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFilePipe.txt";
-            //Assert.IsTrue(File.Exists(filePath));
-                                   
-            var result = helper.ReadFileAndSplitByDelim(filePath, delimArray);
-            Assert.Equals(result, "Name: Downy, Robert | Gender: M | Favorite Color: Purple | DOB: 11 / 26 / 1992");
+            Assert.AreEqual(helper.SafeString("Foo"), "Foo");
+            Assert.AreEqual(helper.SafeString(" Foo   "), "Foo");
+            Assert.AreEqual(helper.SafeString(1), "1");
+            Assert.AreEqual(helper.SafeString(1.25), "1.25");
+            Assert.AreEqual(helper.SafeString("    "), "");
+            Assert.AreEqual(helper.SafeString(null), "");
         }
 
         [TestMethod]
@@ -33,32 +40,31 @@ namespace RecordParserTests
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var inputString = "Zebedane | Zebediah | M | Purple | 10/26/1982";
-            var stringPersonObject = inputString.Split('|');
+            var stringPersonObject = inputString.Split('|',',',' ').ToList();
+
+
+            stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
 
             var inc = 0;
-
-            stringPersonObject.ToList().ForEach(field =>
+            stringPersonObject.ForEach(field =>
             {
                 field = helper.SafeString(field);
                 Assert.AreEqual(expectedOutput[inc], field);
                 inc++;
             });
-
-            //foreach (var field in stringPersonObject)
-            //{
-            //    stringPersonObject[inc] = helper.SafeString(field);
-            //    Assert.AreEqual(expectedOutput[inc], field);
-            //    inc++;
-            //}
-
         }
 
         [TestMethod]
-        public void ReadFileAndSplitByDelim_ParseFieldsInStringObject()
+        public void ParseFieldsIntoPerson()
         {
-            
-
+            var stringObject = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
+            var helper = new ParseHelper();
+            var person = helper.MakePersonFromStringList(stringObject);
+            var expectedPerson = new Person(stringObject);
+            Assert.AreEqual(expectedPerson.GetFormattedString(), person.GetFormattedString());
         }
+
+
 
 
         //public string pipeTestData = " Lname | Fname | Gender | FColor | 8/25/1997 \n Emanl | Emanf | Redneg | Rolocf | 7/15/1989 ";

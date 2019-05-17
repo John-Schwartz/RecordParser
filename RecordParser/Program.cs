@@ -16,11 +16,11 @@ namespace RecordParser
             var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
             var delimArray = new char[] { '|', ',', ' ' };
 
-            var recordDictionary = ReadFileAndSplitByDelim(filePath, delimArray);
+            var recordList = ReadFileAndSplitByDelim(filePath, delimArray);
 
-            for (var i = 0; i < recordDictionary.Count; i++)
+            for (var i = 0; i < recordList.Count; i++)
             {
-                objectList.Add(MakePersonFromStringList(recordDictionary[i]));
+                objectList.Add(new Person(recordList[i]));
             }
 
             // read file, split by line => List<string>
@@ -123,41 +123,34 @@ namespace RecordParser
             return string.Empty;
         }
 
-        public static Person MakePersonFromStringList(List<string> recordStringFields)
+        //public static Person MakePersonFromStringList(List<string> recordStringFields)
+        //{
+        //    var newPerson = new Person();
+
+        //    try
+        //    {
+        //        newPerson = new Person(recordStringFields);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        var message = "Exception thrown while creating Person object";
+        //        WriteExceptionMessage(e, "MakePersonFromStringList", message);
+        //        //recordStringFields.ForEach(x => Console.Write($"{SafeString(x)} "));
+        //    }
+
+        //    return newPerson;
+        //}
+
+        public static List<List<string>> ReadFileAndSplitByDelim(string path, char[] delim)
         {
-            var newPerson = new Person();
+            var recordArrayList = new List<List<string>>();
 
-            try
-            {
-                newPerson = new Person
-                {
-                    LastName = SafeString(recordStringFields[0]),
-                    FirstName = SafeString(recordStringFields[1]),
-                    Gender = SafeString(recordStringFields[2]),
-                    FavoriteColor = SafeString(recordStringFields[3]),
-                    DateOfBirth = ParseDateString(recordStringFields[4])
-                };
-
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while creating Person object";
-                WriteExceptionMessage(e, "MakePersonFromStringList", message);
-                //recordStringFields.ForEach(x => Console.Write($"{SafeString(x)} "));
-            }
-
-            return newPerson;
-        }
-
-        public static Dictionary<int, List<string>> ReadFileAndSplitByDelim(string path, char[] delim)
-        {
             if (path == null || path == string.Empty || !System.IO.File.Exists(path))
             {
                 Console.WriteLine("Invalid path");
-                return new Dictionary<int, List<string>>();
+                return recordArrayList;
             }
-
-            var recordArrayDict = new Dictionary<int, List<string>>();
+            
             try
             {
                 var allLines = File.ReadAllLines(path);
@@ -171,7 +164,7 @@ namespace RecordParser
                     //TODO: Can't currently take dates of format "Feb 21 1990"
                     var DelimChars = splitStringObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
 
-                    recordArrayDict.Add(counter, splitStringObject);
+                    recordArrayList.Add(splitStringObject);
                     counter++;
                 }
             }
@@ -181,7 +174,7 @@ namespace RecordParser
                 WriteExceptionMessage(e, "ReadFileAndSplitByDelim", message);
             }
 
-            return recordArrayDict;
+            return recordArrayList;
         }
 
         public static DateTime ParseDateString(string dateString)
@@ -209,6 +202,33 @@ namespace RecordParser
         public string Gender { get; set; }
         public string FavoriteColor { get; set; }
         public DateTime DateOfBirth { get; set; }
+
+        public Person() { }
+
+        public Person(IEnumerable<string> stringFields)
+        {
+            LastName = stringFields.ElementAt(0);
+            FirstName = stringFields.ElementAt(1);
+            Gender = stringFields.ElementAt(2);
+            FavoriteColor = stringFields.ElementAt(3);
+            DateOfBirth = ParseDateString(stringFields.ElementAt(4));
+        }
+
+        private DateTime ParseDateString(string dateString)
+        {
+            DateTime.TryParse(dateString, out DateTime result);
+            if (result == null || result == DateTime.MinValue)
+            {
+                return DateTime.MinValue;
+            }
+            return result;
+        }
+
+        public string GetFormattedString()
+        {
+            return ("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
+                   $"{LastName}, {FirstName}", Gender, FavoriteColor, DateOfBirth.ToString("M/d/yyyy")).ToString();
+        }
     }
 
     public class ParseHelper
@@ -221,7 +241,7 @@ namespace RecordParser
                 var sortedList = (from p in personList
                                   orderby p.Gender, p.LastName ascending
                                   select p).ToList();
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
             }
             catch (Exception e)
             {
@@ -237,7 +257,7 @@ namespace RecordParser
                 var sortedList = (from p in personList
                                   orderby p.DateOfBirth ascending
                                   select p).ToList();
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
             }
             catch (Exception e)
             {
@@ -255,7 +275,7 @@ namespace RecordParser
                                   orderby p.LastName descending
                                   select p).ToList();
 
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
             }
             catch (Exception e)
             {
@@ -301,7 +321,7 @@ namespace RecordParser
             return string.Empty;
         }
 
-        public Person MakePersonFromStringList(List<string> recordStringFields)
+        public Person MakePersonFromStringList(IEnumerable<string> recordStringFields)
         {
             var newPerson = new Person();
 
@@ -309,11 +329,11 @@ namespace RecordParser
             {
                 newPerson = new Person
                 {
-                    LastName = SafeString(recordStringFields[0]),
-                    FirstName = SafeString(recordStringFields[1]),
-                    Gender = SafeString(recordStringFields[2]),
-                    FavoriteColor = SafeString(recordStringFields[3]),
-                    DateOfBirth = ParseDateString(recordStringFields[4])
+                    LastName = SafeString(recordStringFields.ElementAt(0)),
+                    FirstName = SafeString(recordStringFields.ElementAt(1)),
+                    Gender = SafeString(recordStringFields.ElementAt(2)),
+                    FavoriteColor = SafeString(recordStringFields.ElementAt(3)),
+                    DateOfBirth = ParseDateString(recordStringFields.ElementAt(4))
                 };
 
             }
@@ -327,30 +347,29 @@ namespace RecordParser
             return newPerson;
         }
 
-        public Dictionary<int, List<string>> ReadFileAndSplitByDelim(string path, char[] delim)
+        public IEnumerable<string> ReadLinesFromFile(string filePath)
         {
-            if (path == null || path == string.Empty || !System.IO.File.Exists(path))
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
                 Console.WriteLine("Invalid path");
-                return new Dictionary<int, List<string>>();
+                return null;
             }
 
-            var recordArrayDict = new Dictionary<int, List<string>>();
+            return File.ReadAllLines(filePath);
+        }
+
+        public IEnumerable<string> ReadFileAndSplitByDelim(string path, char[] delim)
+        {
+            var splitStringObject = new List<string>();
             try
             {
-                var allLines = File.ReadAllLines(path);
+                var allLines = ReadLinesFromFile(path);
 
-                var counter = 0;
                 foreach (var recordString in allLines)
                 {
-                    if (recordString == string.Empty) { continue; }
+                    if (string.IsNullOrEmpty(recordString)) continue;
 
-                    var splitStringObject = recordString.Split(delim).ToList();
-                    
-                    var DelimChars = splitStringObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
-
-                    recordArrayDict.Add(counter, splitStringObject);
-                    counter++;
+                    splitStringObject = SplitAndSafeStringLine(recordString).ToList();
                 }
             }
             catch (Exception e)
@@ -359,7 +378,15 @@ namespace RecordParser
                 WriteExceptionMessage(e, "ReadFileAndSplitByDelim", message);
             }
 
-            return recordArrayDict;
+            return splitStringObject;
+        }
+
+        public IEnumerable<string> SplitAndSafeStringLine(string inputString)
+        {
+            var stringPersonObject = inputString.Split('|').ToList();
+            stringPersonObject.ForEach(field => { field = SafeString(field); });
+            stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+            return stringPersonObject;
         }
 
         public DateTime ParseDateString(string dateString)
