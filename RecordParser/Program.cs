@@ -11,13 +11,15 @@ namespace RecordParser
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Start");
-            var objectList = new List<Person>();
+            var helper = new ParseHelper();
             var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
             var delimArray = new char[] { '|', ',', ' ' };
 
-            var recordList = ReadFileAndSplitByDelim(filePath, delimArray);
-
+            Console.WriteLine("Start");
+            var objectList = new List<Person>();
+            
+            var recordList = helper.ReadFileAndSplitLinesByDelim(filePath, delimArray).ToList();
+                        
             for (var i = 0; i < recordList.Count; i++)
             {
                 objectList.Add(new Person(recordList[i]));
@@ -175,16 +177,6 @@ namespace RecordParser
             }
 
             return recordArrayList;
-        }
-
-        public static DateTime ParseDateString(string dateString)
-        {
-            DateTime.TryParse(dateString, out DateTime result);
-            if (result == null || result == DateTime.MinValue)
-            {
-                return DateTime.MinValue;
-            }
-            return result;
         }
 
         public static void WriteExceptionMessage(Exception e, string functionName = "", string humanMessage = "")

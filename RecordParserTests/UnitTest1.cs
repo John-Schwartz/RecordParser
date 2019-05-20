@@ -11,16 +11,8 @@ namespace RecordParserTests
 {
     [TestClass]
     public class UnitTest1
-    {
+    {        
 
-
-        // Given a file path, read the lines, and parse each line by delimiter
-        [TestMethod]
-        public void ReadFileAndSplitByDelimTest_ValidFilePath()
-        {
-            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
-            Assert.IsTrue(File.Exists(filePath));
-        }
 
         [TestMethod]
         public void SafeStringTest()
@@ -35,7 +27,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Pipe()
+        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Pipe()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -52,7 +44,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Comma()
+        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Comma()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -70,7 +62,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Space()
+        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Space()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -91,12 +83,35 @@ namespace RecordParserTests
         {
             var stringObject = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var helper = new ParseHelper();
-            var person = helper.MakePersonFromStringList(stringObject);
-            var expectedPerson = new Person(stringObject);
-            Assert.AreEqual(expectedPerson.GetFormattedString(), person.GetFormattedString());
+            var testPerson = new Person(stringObject);
+            var expectedPerson = new Person
+            {
+                LastName = "Zebedane",
+                FirstName = "Zebediah",
+                Gender = "M",
+                FavoriteColor = "Purple",
+                DateOfBirth = new DateTime(1982, 10, 26)
+            };
+            Assert.AreEqual(expectedPerson.GetFormattedString(), testPerson.GetFormattedString());
         }
 
+        public void Person_ParseDateString()
+        {
+            var person = new Person();
+            var date1 = person.ParseDateString("10/26/1982");
+            var date2 = person.ParseDateString("26/10/1982");
+            var date3 = person.ParseDateString("2015-05-16T05:50:06");
+            var date4 = person.ParseDateString("blahblahblah");
 
+            Assert.AreEqual(new DateTime(1982, 10, 26), date1);
+            Assert.AreEqual(new DateTime(1982, 10, 26), date2);
+            Assert.AreEqual(new DateTime(1982, 10, 26), date3);
+
+            Assert.AreEqual(DateTime.MinValue, date4);
+
+
+
+        }
 
 
 

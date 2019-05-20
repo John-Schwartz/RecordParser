@@ -25,7 +25,7 @@ namespace RecordParser
             DateOfBirth = ParseDateString(stringFields.ElementAt(4));
         }
 
-        private DateTime ParseDateString(string dateString)
+        public DateTime ParseDateString(string dateString)
         {
             DateTime.TryParse(dateString, out DateTime result);
             if (result == null || result == DateTime.MinValue)

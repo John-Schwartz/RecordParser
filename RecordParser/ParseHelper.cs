@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,6 @@ namespace RecordParser
                 WriteExceptionMessage(e, "Output1", message);
             }
         }
-
         public static void Output2(List<Person> personList)
         {
             try
@@ -40,7 +40,6 @@ namespace RecordParser
                 WriteExceptionMessage(e, "Output2", message);
             }
         }
-
         public static void Output3(List<Person> personList)
         {
             try
@@ -58,7 +57,6 @@ namespace RecordParser
                 WriteExceptionMessage(e, "Output3", message);
             }
         }
-
         public static void WriteFormattedRecord(Person person)
         {
             Console.WriteLine(GetFormattedRecordString(person));
@@ -68,7 +66,6 @@ namespace RecordParser
             //                        person.FavoriteColor,
             //                        person.DateOfBirth.ToString("M/d/yyyy"));
         }
-
         public static string GetFormattedRecordString(Person person)
         {
             var result = ("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
@@ -79,7 +76,6 @@ namespace RecordParser
 
             return result;
         }
-
         public string SafeString(object obj, bool trimString = true)
         {
             try
@@ -95,34 +91,8 @@ namespace RecordParser
 
             return string.Empty;
         }
-
-        public Person MakePersonFromStringList(IEnumerable<string> recordStringFields)
-        {
-            var newPerson = new Person();
-
-            try
-            {
-                newPerson = new Person
-                {
-                    LastName = SafeString(recordStringFields.ElementAt(0)),
-                    FirstName = SafeString(recordStringFields.ElementAt(1)),
-                    Gender = SafeString(recordStringFields.ElementAt(2)),
-                    FavoriteColor = SafeString(recordStringFields.ElementAt(3)),
-                    DateOfBirth = ParseDateString(recordStringFields.ElementAt(4))
-                };
-
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while creating Person object";
-                WriteExceptionMessage(e, "MakePersonFromStringList", message);
-                //recordStringFields.ForEach(x => Console.Write($"{SafeString(x)} "));
-            }
-
-            return newPerson;
-        }
-
-        public IEnumerable<string> ReadLinesFromFile(string filePath)
+        
+        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLinesByDelim(string filePath, char[] delims)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
@@ -130,21 +100,17 @@ namespace RecordParser
                 return null;
             }
 
-            return File.ReadAllLines(filePath);
-        }
 
-        public IEnumerable<string> ReadFileAndSplitByDelim(string path, char[] delim)
-        {
             var splitStringObject = new List<string>();
+            var returnList = new List<IEnumerable<string>>();
             try
             {
-                var allLines = ReadLinesFromFile(path);
+                var allLines = File.ReadAllLines(filePath); 
 
-                foreach (var recordString in allLines)
+                foreach (var recordLine in allLines)
                 {
-                    if (string.IsNullOrEmpty(recordString)) continue;
-
-                    splitStringObject = SplitAndSafeStringLine(recordString).ToList();
+                    if (string.IsNullOrEmpty(recordLine)) continue;
+                    returnList.Add(SplitAndSafeStringLine(recordLine));
                 }
             }
             catch (Exception e)
@@ -153,12 +119,12 @@ namespace RecordParser
                 WriteExceptionMessage(e, "ReadFileAndSplitByDelim", message);
             }
 
-            return splitStringObject;
+            return returnList;
         }
 
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
-            var stringPersonObject = inputString.Split('|').ToList();
+            var stringPersonObject = inputString.Split('|',',',' ').ToList();
             stringPersonObject.ForEach(field => { field = SafeString(field); });
             stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
             return stringPersonObject;
