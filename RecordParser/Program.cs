@@ -23,6 +23,7 @@ namespace RecordParser
             for (var i = 0; i < recordList.Count; i++)
             {
                 objectList.Add(new Person(recordList[i]));
+                //objectList.ForEach(x => );
             }
 
             Output1(objectList);
