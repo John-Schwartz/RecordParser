@@ -11,8 +11,8 @@ namespace RecordParserTests
 {
     [TestClass]
     public class UnitTest1
-    {        
-
+    {
+        
 
         [TestMethod]
         public void SafeStringTest()
@@ -27,7 +27,31 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLines_Pipe()
+        public void ReadFileAndSplitLines_Test()
+        {
+            var helper = new ParseHelper();
+            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\UnitTestRecordFile.txt";
+            var expectedResult = new List<List<string>>
+            {
+                new List<string> { "Downy", "Robert", "M", "Purple", "11/26/1992"},
+                new List<string> { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982"},
+                new List<string> { "Does", "Jane", "FEM", "yello", "2/19/1942" }
+            };
+            var listOfObjectDataLists = helper.ReadFileAndSplitLines(filePath,  new[] { '|', ',', ' ' });
+            for (var o = 0; o < 3; o++)
+            {
+                var outerList = expectedResult[o];
+                var outerTestList = listOfObjectDataLists.ElementAt(o).ToList();
+                for (var i = 0; i < 5; i++)
+                {
+                    Assert.AreEqual(outerList[i], outerTestList[i]);
+                }
+            }
+
+        }
+
+        [TestMethod]
+        public void SplitAndSafeStringLine_Pipe()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -44,7 +68,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLines_Comma()
+        public void SplitAndSafeStringLine_Comma()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -62,7 +86,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLines_Space()
+        public void SplitAndSafeStringLine_Space()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };

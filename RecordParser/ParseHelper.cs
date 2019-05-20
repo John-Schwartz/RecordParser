@@ -9,16 +9,6 @@ namespace RecordParser
 {
     public class ParseHelper
     {
-        public static string GetFormattedRecordString(Person person)
-        {
-            var result = ("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                                    $"{person.LastName}, {person.FirstName}",
-                                    person.Gender,
-                                    person.FavoriteColor,
-                                    person.DateOfBirth.ToString("M/d/yyyy")).ToString();
-
-            return result;
-        }
         public string SafeString(object obj, bool trimString = true)
         {
             try
@@ -34,7 +24,7 @@ namespace RecordParser
 
             return string.Empty;
         }
-        
+
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath, char[] delims)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
@@ -71,16 +61,6 @@ namespace RecordParser
             stringPersonObject.ForEach(field => { field = SafeString(field); });
             stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
             return stringPersonObject;
-        }
-
-        public DateTime ParseDateString(string dateString)
-        {
-            DateTime.TryParse(dateString, out DateTime result);
-            if (result == null || result == DateTime.MinValue)
-            {
-                return DateTime.MinValue;
-            }
-            return result;
         }
 
         public static void WriteExceptionMessage(Exception e, string functionName = "", string humanMessage = "")

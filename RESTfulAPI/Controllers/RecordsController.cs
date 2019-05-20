@@ -17,6 +17,11 @@ namespace RESTfulAPI.Controllers
 
         RecordsController()
         {
+            TestData = new List<Record>();
+            for (var i = 0; i < 3; i++)
+            {                
+                TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
+            }
             //TestData.Add();
         }
 

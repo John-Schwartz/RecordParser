@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RecordParser
 {
@@ -19,11 +20,10 @@ namespace RecordParser
             var objectList = new List<Person>();
             
             var recordList = helper.ReadFileAndSplitLines(filePath, delimArray).ToList();
-                        
+
             for (var i = 0; i < recordList.Count; i++)
             {
                 objectList.Add(new Person(recordList[i]));
-                //objectList.ForEach(x => );
             }
 
             Output1(objectList);
@@ -43,7 +43,7 @@ namespace RecordParser
                 var sortedList = (from p in personList
                                   orderby p.Gender, p.LastName ascending
                                   select p).ToList();
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.Write(x.GetFormattedString()));
             }
             catch (Exception e)
             {
@@ -59,7 +59,7 @@ namespace RecordParser
                 var sortedList = (from p in personList
                                   orderby p.DateOfBirth ascending
                                   select p).ToList();
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.Write(x.GetFormattedString()));
             }
             catch (Exception e)
             {
@@ -77,23 +77,13 @@ namespace RecordParser
                                   orderby p.LastName descending
                                   select p).ToList();
 
-                sortedList.ForEach(x => WriteFormattedRecord(x));
+                sortedList.ForEach(x => Console.Write(x.GetFormattedString()));
             }
             catch (Exception e)
             {
                 var message = "Exception thrown while writing Output3";
                 WriteExceptionMessage(e, "Output3", message);
             }
-        }
-
-        public static void WriteFormattedRecord(Person person)
-        {
-
-            Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                                    $"{person.LastName}, {person.FirstName}",
-                                    person.Gender,
-                                    person.FavoriteColor,
-                                    person.DateOfBirth.ToString("M/d/yyyy"));
         }
 
         public static void WriteExceptionMessage(Exception e, string functionName = "", string humanMessage = "")
