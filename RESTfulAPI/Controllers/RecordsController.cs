@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using System.Web.Mvc;
+//using System.Web.Mvc;
 using Newtonsoft.Json;
 
 namespace RESTfulAPI.Controllers
@@ -18,7 +18,7 @@ namespace RESTfulAPI.Controllers
         RecordsController()
         {
             TestData = new List<Record>();
-            for (var i = 0; i < 3; i++)
+            for (var i = 0; i < 5; i++)
             {                
                 TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
             }
@@ -31,24 +31,37 @@ namespace RESTfulAPI.Controllers
             return JsonConvert.SerializeObject(TestData);
         }
 
-        // GET api/values/5
+        [System.Web.Http.Route("Api/Records/{searchWord}")]
         public string Get(string searchWord)
         {
-            switch (searchWord)
+            switch (searchWord.ToLowerInvariant())
             {
                 case "gender":
-                    var genderSorted = "";
-                    break;
+                    var genderSorted = (from r in TestData
+                                        orderby r.Gender
+                                        select r).ToList();
+                    return JsonConvert.SerializeObject(genderSorted);
 
                 case "birthdate":
-                    var dobSorted = "";
-                    break;
+                    var dobSorted = (from r in TestData
+                                     orderby r.DateOfBirth
+                                     select r).ToList();
+                    return JsonConvert.SerializeObject(dobSorted);
+
+                case "birthdate_reverse":
+                    var dobSortedReverse = (from r in TestData
+                                     orderby r.DateOfBirth descending
+                                     select r).ToList();
+                    return JsonConvert.SerializeObject(dobSortedReverse);
 
                 case "name":
-                    var nameSorted = "";
-                    break;
+                    var nameSorted = (from r in TestData
+                                      orderby r.LastName, r.FirstName
+                                      select r).ToList();
+                    return JsonConvert.SerializeObject(nameSorted);
+
+                default: return JsonConvert.SerializeObject(TestData);
             }
-            return "value";
         }
 
         // POST api/values
