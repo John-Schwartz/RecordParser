@@ -64,6 +64,13 @@ namespace RESTfulAPI.Controllers
             }
         }
 
+        public HttpResponseMessage Post(string recordJson)
+        {
+            var newRecord = JsonConvert.DeserializeObject<Record>(recordJson);
+            TestData.Add(newRecord);
+            return new HttpResponseMessage(HttpStatusCode.Accepted);
+        }
+
         // POST api/values
         //public HttpResponseMessage Post([FromBody]Record record)
         //{
