@@ -35,20 +35,52 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine()
+        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Pipe()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
-            var inputString = "Zebedane | Zebediah | M | Purple | 10/26/1982";
-            var stringPersonObject = inputString.Split('|',',',' ').ToList();
+            var pipeInputString = "Zebedane | Zebediah | M | Purple | 10/26/1982";
 
+            var personDataList = helper.SplitAndSafeStringLine(pipeInputString).ToList();
+                                    
+            var inc = 0;
+            personDataList.ForEach(field =>
+            {
+                Assert.AreEqual(expectedOutput[inc], field);
+                inc++;
+            });
+        }
 
-            stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+        [TestMethod]
+        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Comma()
+        {
+            var helper = new ParseHelper();
+            var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
+            var commaInputString = "Zebedane, Zebediah, M, Purple, 10/26/1982";
+
+            var personDataList = helper.SplitAndSafeStringLine(commaInputString).ToList();
 
             var inc = 0;
-            stringPersonObject.ForEach(field =>
+
+            personDataList.ForEach(field =>
             {
-                field = helper.SafeString(field);
+                Assert.AreEqual(expectedOutput[inc], field);
+                inc++;
+            });
+        }
+
+        [TestMethod]
+        public void ReadFileAndSplitByDelim_SplitAndSafeStringLine_Space()
+        {
+            var helper = new ParseHelper();
+            var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
+            var spaceInputString = "Zebedane Zebediah M Purple 10/26/1982";
+
+            var personDataList = helper.SplitAndSafeStringLine(spaceInputString).ToList();
+
+            var inc = 0;
+            personDataList.ForEach(field =>
+            {
                 Assert.AreEqual(expectedOutput[inc], field);
                 inc++;
             });
@@ -63,6 +95,8 @@ namespace RecordParserTests
             var expectedPerson = new Person(stringObject);
             Assert.AreEqual(expectedPerson.GetFormattedString(), person.GetFormattedString());
         }
+
+
 
 
 
