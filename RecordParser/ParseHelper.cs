@@ -9,63 +9,6 @@ namespace RecordParser
 {
     public class ParseHelper
     {
-
-        public static void Output1(List<Person> personList)
-        {
-            try
-            {
-                var sortedList = (from p in personList
-                                  orderby p.Gender, p.LastName ascending
-                                  select p).ToList();
-                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while writing Output1";
-                WriteExceptionMessage(e, "Output1", message);
-            }
-        }
-        public static void Output2(List<Person> personList)
-        {
-            try
-            {
-                var sortedList = (from p in personList
-                                  orderby p.DateOfBirth ascending
-                                  select p).ToList();
-                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while writing Output2";
-                WriteExceptionMessage(e, "Output2", message);
-            }
-        }
-        public static void Output3(List<Person> personList)
-        {
-            try
-            {
-                //var sortedList2 = personList.Select(x => x).OrderBy(x => x.LastName).ToList();
-                var sortedList = (from p in personList
-                                  orderby p.LastName descending
-                                  select p).ToList();
-
-                sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while writing Output3";
-                WriteExceptionMessage(e, "Output3", message);
-            }
-        }
-        public static void WriteFormattedRecord(Person person)
-        {
-            Console.WriteLine(GetFormattedRecordString(person));
-            //Console.WriteLine("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-            //                        $"{person.LastName}, {person.FirstName}",
-            //                        person.Gender,
-            //                        person.FavoriteColor,
-            //                        person.DateOfBirth.ToString("M/d/yyyy"));
-        }
         public static string GetFormattedRecordString(Person person)
         {
             var result = ("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
@@ -92,7 +35,7 @@ namespace RecordParser
             return string.Empty;
         }
         
-        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLinesByDelim(string filePath, char[] delims)
+        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath, char[] delims)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {

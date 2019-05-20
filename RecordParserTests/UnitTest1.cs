@@ -27,7 +27,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Pipe()
+        public void ReadFileAndSplitLines_Pipe()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -44,7 +44,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Comma()
+        public void ReadFileAndSplitLines_Comma()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -62,7 +62,7 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ReadFileAndSplitLinesByDelim_SplitAndSafeStringLine_Space()
+        public void ReadFileAndSplitLines_Space()
         {
             var helper = new ParseHelper();
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
@@ -95,23 +95,21 @@ namespace RecordParserTests
             Assert.AreEqual(expectedPerson.GetFormattedString(), testPerson.GetFormattedString());
         }
 
+        [TestMethod]
         public void Person_ParseDateString()
         {
             var person = new Person();
             var date1 = person.ParseDateString("10/26/1982");
-            var date2 = person.ParseDateString("26/10/1982");
-            var date3 = person.ParseDateString("2015-05-16T05:50:06");
-            var date4 = person.ParseDateString("blahblahblah");
+            var date2 = person.ParseDateString("blahblahblah");
+            var date3 = person.ParseDateString("1982-10-26T05:50:00");
+            
 
             Assert.AreEqual(new DateTime(1982, 10, 26), date1);
-            Assert.AreEqual(new DateTime(1982, 10, 26), date2);
-            Assert.AreEqual(new DateTime(1982, 10, 26), date3);
-
-            Assert.AreEqual(DateTime.MinValue, date4);
-
-
-
+            Assert.AreEqual(DateTime.MinValue, date2);
+            Assert.AreEqual(new DateTime(1982, 10, 26, 5, 50, 0), date3);
         }
+
+
 
 
 
