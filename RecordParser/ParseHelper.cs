@@ -57,6 +57,7 @@ namespace RecordParser
 
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
+            
             var stringPersonObject = inputString.Split('|',',',' ').ToList();
             stringPersonObject.ForEach(field => { field = SafeString(field); });
             stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);

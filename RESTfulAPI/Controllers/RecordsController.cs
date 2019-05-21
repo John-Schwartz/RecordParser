@@ -8,16 +8,20 @@ using System.Web.Http;
 //using System.Web.Mvc;
 using Newtonsoft.Json;
 using RecordParser;
+using System.Threading.Tasks;
+//using System.Web.Mvc;
 
 namespace RESTfulAPI.Controllers
 {
 
     public class RecordsController : ApiController
     {
+
         public List<Record> TestData { get; set; }
 
         RecordsController()
         {
+            TestData = new List<Record>();
             for (var i = 0; i < 5; i++)
             {                
                 TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
@@ -64,14 +68,17 @@ namespace RESTfulAPI.Controllers
             }
         }
 
-        public HttpResponseMessage Post(string recordString)
+        // Request body media type text, no explicit quotation marks e.g.: Downy | Robert | M | Purple | 11/26/1992
+        [HttpPost]
+        public async Task<HttpResponseMessage> Post()
         {
+            var recordString = await Request.Content.ReadAsStringAsync();
             var helper = new RecordParser.ParseHelper();
             var delimArray = new char[] { '|', ',', ' ' };
             var result = helper.SplitAndSafeStringLine(recordString);
             var newRecord = new Record(result);
             TestData.Add(newRecord);
-            return new HttpResponseMessage(HttpStatusCode.Accepted);
+            return new HttpResponseMessage(HttpStatusCode.Accepted);            
         }
 
         // POST api/values
