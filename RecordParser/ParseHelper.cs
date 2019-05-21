@@ -9,20 +9,11 @@ namespace RecordParser
 {
     public class ParseHelper
     {
+        // Takes any object and safely executes ToString, with optional string trimming. Returns an empty string if any part failed.
         public string SafeString(object obj, bool trimString = true)
         {
-            try
-            {
-                if (trimString) return obj?.ToString().Trim() ?? string.Empty;
-                return obj?.ToString() ?? string.Empty;
-            }
-            catch (Exception e)
-            {
-                var message = "Exception thrown while making string safe";
-                WriteExceptionMessage(e, "SafeString", message);
-            }
-
-            return string.Empty;
+            if (trimString) return obj?.ToString().Trim() ?? string.Empty;
+            return obj?.ToString() ?? string.Empty;
         }
 
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath, char[] delims)
@@ -32,17 +23,17 @@ namespace RecordParser
                 Console.WriteLine("Invalid path");
                 return null;
             }
-
-
-            var splitStringObject = new List<string>();
+            
             var returnList = new List<IEnumerable<string>>();
             try
             {
-                var allLines = File.ReadAllLines(filePath); 
-
+                var allLines = File.ReadAllLines(filePath);
+                
+                // For each line in the file, if it isn't empty, split by the delimiter and trim space.
+                // Once split and cleaned up, add the string array to the return list
                 foreach (var recordLine in allLines)
                 {
-                    if (string.IsNullOrEmpty(recordLine)) continue;
+                    if (string.IsNullOrEmpty(recordLine)) continue;                                        
                     returnList.Add(SplitAndSafeStringLine(recordLine));
                 }
             }
@@ -55,10 +46,11 @@ namespace RecordParser
             return returnList;
         }
 
+        // Split the input string by the delimiters, then run safestring on each split string item
+        // Remove any whitespace, remaining delims or empty elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
-        {
-            
-            var stringPersonObject = inputString.Split('|',',',' ').ToList();
+        {            
+            var stringPersonObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
             stringPersonObject.ForEach(field => { field = SafeString(field); });
             stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
             return stringPersonObject;
