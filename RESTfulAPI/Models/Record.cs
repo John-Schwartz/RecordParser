@@ -21,5 +21,25 @@ namespace RESTfulAPI.Models
             FavoriteColor = favoriteColor;
             DateOfBirth = dob;
         }
+
+        public Record(IEnumerable<string> objStringData)
+        {
+            var list = objStringData.ToList();
+            LastName = list[0];
+            FirstName = list[1];
+            Gender = list[2];
+            FavoriteColor = list[3];
+            DateOfBirth = ParseDateString(list[4]);
+        }
+
+        private DateTime ParseDateString(string dateString)
+        {
+            DateTime.TryParse(dateString, out DateTime result);
+            if (result == null || result == DateTime.MinValue)
+            {
+                return DateTime.MinValue;
+            }
+            return result;
+        }
     }
 }

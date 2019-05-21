@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Web.Http;
 //using System.Web.Mvc;
 using Newtonsoft.Json;
+using RecordParser;
 
 namespace RESTfulAPI.Controllers
 {
@@ -17,7 +18,6 @@ namespace RESTfulAPI.Controllers
 
         RecordsController()
         {
-            TestData = new List<Record>();
             for (var i = 0; i < 5; i++)
             {                
                 TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
@@ -64,9 +64,12 @@ namespace RESTfulAPI.Controllers
             }
         }
 
-        public HttpResponseMessage Post(string recordJson)
+        public HttpResponseMessage Post(string recordString)
         {
-            var newRecord = JsonConvert.DeserializeObject<Record>(recordJson);
+            var helper = new RecordParser.ParseHelper();
+            var delimArray = new char[] { '|', ',', ' ' };
+            var result = helper.SplitAndSafeStringLine(recordString);
+            var newRecord = new Record(result);
             TestData.Add(newRecord);
             return new HttpResponseMessage(HttpStatusCode.Accepted);
         }
