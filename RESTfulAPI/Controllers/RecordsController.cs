@@ -17,9 +17,9 @@ namespace RESTfulAPI.Controllers
     public class RecordsController : ApiController
     {
 
-        public List<Record> TestData { get; set; }
+        List<Record> TestData { get; set; }
 
-        RecordsController()
+        public RecordsController()
         {
             TestData = new List<Record>();
             for (var i = 0; i < 5; i++)

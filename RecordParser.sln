@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParser", "RecordParser\RecordParser.csproj", "{35DD5CE7-0D1F-4376-995C-69C74715E809}"
 EndProject
@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParserTests", "Record
 	ProjectSection(ProjectDependencies) = postProject
 		{35DD5CE7-0D1F-4376-995C-69C74715E809} = {35DD5CE7-0D1F-4376-995C-69C74715E809}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{15C0CE1C-3929-4286-953F-86BF60CDAA22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +32,10 @@ Global
 		{6254D218-33F3-4E26-87A2-FF893D981993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6254D218-33F3-4E26-87A2-FF893D981993}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6254D218-33F3-4E26-87A2-FF893D981993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
