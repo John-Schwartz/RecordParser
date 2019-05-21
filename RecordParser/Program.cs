@@ -12,20 +12,18 @@ namespace RecordParser
     {
         public static void Main(string[] args)
         {
+            var objectList = new List<Person>();
             var helper = new ParseHelper();
-            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
             var delimArray = new char[] { '|', ',', ' ' };
+            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";            
 
             Console.WriteLine("Start");
-            var objectList = new List<Person>();
             
+            // Read each line of the the file, split the data by the delimiters, return the cleaned up string array
             var recordList = helper.ReadFileAndSplitLines(filePath, delimArray).ToList();
+            recordList.ForEach(strArray => objectList.Add(new Person(strArray))); // for each record data string array, add it to the list
 
-            for (var i = 0; i < recordList.Count; i++)
-            {
-                objectList.Add(new Person(recordList[i]));
-            }
-
+            //Outputs sort with linq then call Console.Write on the formatted string;
             Output1(objectList);
             Console.WriteLine();
             Output2(objectList);
@@ -85,7 +83,7 @@ namespace RecordParser
                 WriteExceptionMessage(e, "Output3", message);
             }
         }
-
+                
         public static void WriteExceptionMessage(Exception e, string functionName = "", string humanMessage = "")
         {
             Console.WriteLine($"{functionName} - {humanMessage}\n");

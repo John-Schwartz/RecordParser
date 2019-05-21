@@ -47,7 +47,7 @@ namespace RecordParser
         }
 
         // Split the input string by the delimiters, then run safestring on each split string item
-        // Remove any whitespace, remaining delims or empty elements, then return the string array
+        // Remove any empty string, remaining delims or whitespace elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {            
             var stringPersonObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
