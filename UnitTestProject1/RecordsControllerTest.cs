@@ -51,6 +51,10 @@ namespace UnitTestProject1
             expectedResults = JsonConvert.SerializeObject(nameSorted);
             controllerResult = controller.Get("name");
             Assert.AreEqual(controllerResult, expectedResults);
+
+            // Default json returned with anything other than expected strings
+            var controllerResultDefault = controller.Get("11blahblahokaskasasgasdgasdgalfeiwfqnk");
+            Assert.AreEqual(controllerResultDefault, expectedResults);
         }
 
         [TestMethod]
@@ -58,7 +62,9 @@ namespace UnitTestProject1
         {
             // Arrange
             RecordsController controller = new RecordsController();
-                       
+            Record newRecord = new Record("Downy", "Robert", "M", "Purple", new DateTime(1992, 11, 26));
+            var testRecords = GetTestRecords();
+
             controller.Request = new HttpRequestMessage
             {
                 RequestUri = new Uri("http://localhost/api/records"),
@@ -75,17 +81,21 @@ namespace UnitTestProject1
                 route: new HttpRoute(),
                 values: new HttpRouteValueDictionary { { "controller", "records" } });
 
-            // Act
-            Record newRecord = new Record("Downy", "Robert", "M", "Purple", new DateTime(1992, 11, 26));
-            var testRecords = GetTestRecords();
+            // Act            
             testRecords.Add(newRecord);
 
             var response = controller.Post();
-            
+            response.Result.TryGetContentValue(out HttpResponseMessage contentVal);
+
+            //unit testing breaks with async functions
+            //var returnedContent = await contentVal.Content.ReadAsStringAsync();
+
+
             // Assert
             Assert.AreEqual(controller.Get(), JsonConvert.SerializeObject(testRecords));
+            //Assert.AreEqual(JsonConvert.SerializeObject(await returnedContent), JsonConvert.SerializeObject(testRecords));
         }
-
+        
         private List<Record> GetTestRecords()
         {
             var testRecords = new List<Record>();
@@ -95,6 +105,16 @@ namespace UnitTestProject1
             }
             return testRecords;
         }
+
+        //private List<Record> GetBadTestRecords()
+        //{
+        //    var badStringArray = new string[] { null, string.Empty, "false", "aaaaaaaa", "2001-11-26" };
+        //    return new List<Record>
+        //    {
+        //        new Record(null, string.Empty, "false", "aaaaaaaa", new DateTime()),
+        //        new Record(badStringArray)
+        //    };
+        //}
 
 
     }

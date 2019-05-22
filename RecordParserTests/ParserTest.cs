@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RESTfulAPI;
+//using RESTfulAPI;
 using RecordParserTests;
 using RecordParser;
 using System.Collections.Generic;
@@ -12,7 +12,27 @@ namespace RecordParserTests
     [TestClass]
     public class ParserTest
     {
-        
+        //[TestMethod]
+        //public void MainTest()
+        //{
+        //    var objectList = new List<Record>();
+        //    var helper = new ParseHelper();
+        //    var delimArray = new char[] { '|', ',', ' ' };
+        //    var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
+        //    //var listOfInputStrings = new List<string> {
+        //    //    "Zebedane | Zebediah | M | Purple | 10/26/1982",
+        //    //    "Zebedane, Zebediah, M, Purple, 10/26/1982",
+        //    //    "Zebedane Zebediah M Purple 10/26/1982"
+        //    //};
+        //    Console.WriteLine("Start");
+
+        //    // Read each line of the the file, split the data by the delimiters, return the cleaned up string array
+        //    var recordList = helper.ReadFileAndSplitLines(filePath, delimArray).ToList();
+        //    // for each record data string array, add it to the list
+        //    recordList.ForEach(strArray => objectList.Add(new Record(strArray)));
+
+            
+        //}
 
         [TestMethod]
         public void SafeStringTest()
@@ -40,7 +60,9 @@ namespace RecordParserTests
                 new List<string> { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982"},
                 new List<string> { "Does", "Jane", "FEM", "yello", "2/19/1942" }
             };
+
             var listOfObjectDataLists = helper.ReadFileAndSplitLines(filePath,  new[] { '|', ',', ' ' });
+            var listOfOutputRecords = new List<Record>();
             Assert.IsNotNull(listOfObjectDataLists);
 
             for (var o = 0; o < 3; o++)
@@ -54,6 +76,8 @@ namespace RecordParserTests
                     Assert.AreEqual(expectedList[i], testList[i]);
                 }
             }
+
+            //expectedResult.ForEach(res => )
         }
 
         [TestMethod]
@@ -63,11 +87,11 @@ namespace RecordParserTests
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var pipeInputString = "Zebedane | Zebediah | M | Purple | 10/26/1982";
 
-            var personDataList = helper.SplitAndSafeStringLine(pipeInputString).ToList();
-            Assert.IsNotNull(personDataList);
+            var RecordDataList = helper.SplitAndSafeStringLine(pipeInputString).ToList();
+            Assert.IsNotNull(RecordDataList);
             
             var inc = 0;
-            personDataList.ForEach(field =>
+            RecordDataList.ForEach(field =>
             {
                 Assert.AreEqual(expectedOutput[inc], field);
                 inc++;
@@ -81,11 +105,11 @@ namespace RecordParserTests
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var commaInputString = "Zebedane, Zebediah, M, Purple, 10/26/1982";
 
-            var personDataList = helper.SplitAndSafeStringLine(commaInputString).ToList();
+            var RecordDataList = helper.SplitAndSafeStringLine(commaInputString).ToList();
 
             var inc = 0;
 
-            personDataList.ForEach(field =>
+            RecordDataList.ForEach(field =>
             {
                 Assert.AreEqual(expectedOutput[inc], field);
                 inc++;
@@ -99,10 +123,10 @@ namespace RecordParserTests
             var expectedOutput = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var spaceInputString = "Zebedane Zebediah M Purple 10/26/1982";
 
-            var personDataList = helper.SplitAndSafeStringLine(spaceInputString).ToList();
+            var RecordDataList = helper.SplitAndSafeStringLine(spaceInputString).ToList();
 
             var inc = 0;
-            personDataList.ForEach(field =>
+            RecordDataList.ForEach(field =>
             {
                 Assert.AreEqual(expectedOutput[inc], field);
                 inc++;
@@ -110,12 +134,12 @@ namespace RecordParserTests
         }
 
         [TestMethod]
-        public void ParseFieldsIntoPerson()
+        public void ParseFieldsIntoRecord()
         {
             var stringObject = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var helper = new ParseHelper();
-            var testPerson = new Person(stringObject);
-            var expectedPerson = new Person
+            var testRecord = new Record(stringObject);
+            var expectedRecord = new Record
             {
                 LastName = "Zebedane",
                 FirstName = "Zebediah",
@@ -123,16 +147,16 @@ namespace RecordParserTests
                 FavoriteColor = "Purple",
                 DateOfBirth = new DateTime(1982, 10, 26)
             };
-            Assert.AreEqual(expectedPerson.GetFormattedString(), testPerson.GetFormattedString());
+            Assert.AreEqual(expectedRecord.GetFormattedString(), testRecord.GetFormattedString());
         }
 
         [TestMethod]
-        public void Person_ParseDateString()
+        public void Record_ParseDateString()
         {
-            var person = new Person();
-            var date1 = person.ParseDateString("10/26/1982");
-            var date2 = person.ParseDateString("blahblahblah");
-            var date3 = person.ParseDateString("1982-10-26T05:50:00");
+            var Record = new Record();
+            var date1 = Record.ParseDateString("10/26/1982");
+            var date2 = Record.ParseDateString("blahblahblah");
+            var date3 = Record.ParseDateString("1982-10-26T05:50:00");
             
 
             Assert.AreEqual(new DateTime(1982, 10, 26), date1);
@@ -187,28 +211,6 @@ namespace RecordParserTests
         // Can parse pipes and split to 5
         // Can parse commas and split to 5
         // Can parse spaces
-        // Can parse dates of multiple formats
         // Can remove space, pipe, comma indiv values from 
-
-        public void ReadFileAndSplitByDelim_SplitRow_SplitByPipe()
-        {
-
-        }
-
-        public void ReadFileAndSplitByDelim_SplitRow_SplitByComma()
-        {
-
-        }
-
-        public void ReadFileAndSplitByDelim_SplitRow_SplitBySpace()
-        {
-
-        }
-
-
-        public void Output1()
-        {
-
-        }
     }
 }

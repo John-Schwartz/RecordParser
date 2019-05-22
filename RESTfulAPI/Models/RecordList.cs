@@ -7,6 +7,6 @@ namespace RESTfulAPI.Models
 {
     public class RecordList
     {
-        public List<Record> Records { get; set; }
+        //public List<Record> Records { get; set; }
     }
 }

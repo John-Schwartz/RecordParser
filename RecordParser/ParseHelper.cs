@@ -9,22 +9,22 @@ namespace RecordParser
 {
     public class ParseHelper
     {
-        public void PrintResults(List<Person> personList)
+        public void PrintResults(List<Record> RecordList)
         {
             Console.WriteLine("\n\nSorted by Gender, then last name descending");
-            var sortedList = (from p in personList
+            var sortedList = (from p in RecordList
                               orderby p.Gender, p.LastName ascending
                               select p).ToList();
             sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
 
             Console.WriteLine("\n\nSorted by Date Of Birth");
-            sortedList = (from p in personList
+            sortedList = (from p in RecordList
                           orderby p.DateOfBirth ascending
                           select p).ToList();
             sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
 
             Console.WriteLine("\n\nSorted by Last Name");
-            sortedList = (from p in personList
+            sortedList = (from p in RecordList
                           orderby p.LastName descending
                           select p).ToList();
             sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
@@ -71,10 +71,10 @@ namespace RecordParser
         // Remove any empty string, remaining delims or whitespace elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
-            var stringPersonObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
-            stringPersonObject.ForEach(field => { field = SafeString(field); });
-            stringPersonObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
-            return stringPersonObject;
+            var stringRecordObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
+            stringRecordObject.ForEach(field => { field = SafeString(field); });
+            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+            return stringRecordObject;
         }
 
         public static void WriteExceptionMessage(Exception e, string functionName = "", string humanMessage = "")

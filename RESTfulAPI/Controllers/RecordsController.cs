@@ -1,4 +1,4 @@
-﻿using RESTfulAPI.Models;
+﻿//using RESTfulAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,8 +103,8 @@ namespace RESTfulAPI.Controllers
 
                 var newRecord = new Record(result);
                 TestData.Add(newRecord);
-                response.StatusCode = HttpStatusCode.Accepted;
-                response.Content = new StringContent(JsonConvert.SerializeObject(TestData));
+
+                return Request.CreateResponse(HttpStatusCode.Accepted, JsonConvert.SerializeObject(TestData));
             }
             catch (Exception e)
             {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RecordParser
 {
-    public class Person
+    public class Record
     {
         public string LastName { get; set; }
         public string FirstName { get; set; }
@@ -14,9 +14,18 @@ namespace RecordParser
         public string FavoriteColor { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        public Person() { }
+        public Record() { }
 
-        public Person(IEnumerable<string> stringFields)
+        public Record(string lastName, string firstName, string gender, string favoriteColor, DateTime dob)
+        {
+            LastName = lastName;
+            FirstName = firstName;
+            Gender = gender;
+            FavoriteColor = favoriteColor;
+            DateOfBirth = dob;
+        }
+
+        public Record(IEnumerable<string> stringFields)
         {
             LastName = stringFields.ElementAt(0);
             FirstName = stringFields.ElementAt(1);
