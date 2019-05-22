@@ -30,7 +30,8 @@ namespace RecordParserTests
         public void ReadFileAndSplitLines_Test()
         {
             var helper = new ParseHelper();
-            var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\UnitTestRecordFile.txt";
+            var filePath = "\\\\abqdatw01\\users\\john.schwartz\\Desktop\\RecordParser\\RecordParser\\RecordParser\\UnitTestRecordFile.txt";
+            
             var expectedResult = new List<List<string>>
             {
                 new List<string> { "Downy", "Robert", "M", "Purple", "11/26/1992"},
@@ -47,7 +48,6 @@ namespace RecordParserTests
                     Assert.AreEqual(expectedList[i], testList[i]);
                 }
             }
-
         }
 
         [TestMethod]

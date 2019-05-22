@@ -63,11 +63,11 @@ namespace RESTfulAPI.Controllers
                                          select r).ToList();
                         return JsonConvert.SerializeObject(dobSorted);
 
-                    case "birthdate_reverse":
-                        var dobSortedReverse = (from r in TestData
-                                                orderby r.DateOfBirth descending
-                                                select r).ToList();
-                        return JsonConvert.SerializeObject(dobSortedReverse);
+                    //case "birthdate_reverse":
+                    //    var dobSortedReverse = (from r in TestData
+                    //                            orderby r.DateOfBirth descending
+                    //                            select r).ToList();
+                    //    return JsonConvert.SerializeObject(dobSortedReverse);
 
                     case "name":
                         var nameSorted = (from r in TestData
