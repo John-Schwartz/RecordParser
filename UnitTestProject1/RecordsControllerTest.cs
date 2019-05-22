@@ -54,13 +54,11 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
-        public void PostSetsLocationHeader()
+        public void Post_AddsRecordAndReturnsFullRecordJson()
         {
             // Arrange
             RecordsController controller = new RecordsController();
-
-
-
+                       
             controller.Request = new HttpRequestMessage
             {
                 RequestUri = new Uri("http://localhost/api/records"),

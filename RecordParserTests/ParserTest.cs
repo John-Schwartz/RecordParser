@@ -31,7 +31,9 @@ namespace RecordParserTests
         {
             var helper = new ParseHelper();
             var filePath = "\\\\abqdatw01\\users\\john.schwartz\\Desktop\\RecordParser\\RecordParser\\RecordParser\\UnitTestRecordFile.txt";
-            
+
+            Assert.IsTrue(File.Exists(filePath));
+
             var expectedResult = new List<List<string>>
             {
                 new List<string> { "Downy", "Robert", "M", "Purple", "11/26/1992"},
@@ -39,12 +41,16 @@ namespace RecordParserTests
                 new List<string> { "Does", "Jane", "FEM", "yello", "2/19/1942" }
             };
             var listOfObjectDataLists = helper.ReadFileAndSplitLines(filePath,  new[] { '|', ',', ' ' });
+            Assert.IsNotNull(listOfObjectDataLists);
+
             for (var o = 0; o < 3; o++)
             {
                 var expectedList = expectedResult[o];
                 var testList = listOfObjectDataLists.ElementAt(o).ToList();
                 for (var i = 0; i < 5; i++)
                 {
+                    Assert.IsNotNull(expectedList[i]);
+                    Assert.IsNotNull(testList[i]);
                     Assert.AreEqual(expectedList[i], testList[i]);
                 }
             }
@@ -58,7 +64,8 @@ namespace RecordParserTests
             var pipeInputString = "Zebedane | Zebediah | M | Purple | 10/26/1982";
 
             var personDataList = helper.SplitAndSafeStringLine(pipeInputString).ToList();
-                                    
+            Assert.IsNotNull(personDataList);
+            
             var inc = 0;
             personDataList.ForEach(field =>
             {

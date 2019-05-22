@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParser", "RecordParser\RecordParser.csproj", "{35DD5CE7-0D1F-4376-995C-69C74715E809}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RESTfulAPI", "RESTfulAPI\RESTfulAPI.csproj", "{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{35DD5CE7-0D1F-4376-995C-69C74715E809} = {35DD5CE7-0D1F-4376-995C-69C74715E809}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParserTests", "RecordParserTests\RecordParserTests.csproj", "{6254D218-33F3-4E26-87A2-FF893D981993}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -13,6 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParserTests", "Record
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestfulAPITests", "UnitTestProject1\RestfulAPITests.csproj", "{15C0CE1C-3929-4286-953F-86BF60CDAA22}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9} = {EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
