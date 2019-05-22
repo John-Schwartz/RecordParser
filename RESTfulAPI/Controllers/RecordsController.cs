@@ -17,55 +17,73 @@ namespace RESTfulAPI.Controllers
     public class RecordsController : ApiController
     {
 
-        List<Record> TestData { get; set; }
+        public List<Record> TestData { get; set; }
 
         public RecordsController()
         {
             TestData = new List<Record>();
             for (var i = 0; i < 5; i++)
-            {                
+            {
                 TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
             }
-            //TestData.Add();
         }
-
-        // GET api/values
+        
         public string Get()
         {
-            return JsonConvert.SerializeObject(TestData);
+            try
+            {
+                return JsonConvert.SerializeObject(TestData);
+            }
+            catch (Exception e)
+            {
+                return $"Exception occurred while returning json data\n" +
+                    $"{e.Message}\n" +
+                    $"{e.InnerException}";
+            }
         }
-        
-        
+
+
         [System.Web.Http.Route("Api/Records/{searchWord}")]
         public string Get(string searchWord)
         {
-            switch (searchWord.ToLowerInvariant())
+            try
             {
-                case "gender":
-                    var genderSorted = (from r in TestData
-                                        orderby r.Gender
-                                        select r).ToList();
-                    return JsonConvert.SerializeObject(genderSorted);
+                if (string.IsNullOrEmpty(searchWord)) return "Sort criteria empty or null";
+                switch (searchWord.ToLowerInvariant())
+                {
+                    case "gender":
+                        var genderSorted = (from r in TestData
+                                            orderby r.Gender
+                                            select r).ToList();
+                        return JsonConvert.SerializeObject(genderSorted);
 
-                case "birthdate":
-                    var dobSorted = (from r in TestData
-                                     orderby r.DateOfBirth
-                                     select r).ToList();
-                    return JsonConvert.SerializeObject(dobSorted);
+                    case "birthdate":
+                        var dobSorted = (from r in TestData
+                                         orderby r.DateOfBirth
+                                         select r).ToList();
+                        return JsonConvert.SerializeObject(dobSorted);
 
-                case "birthdate_reverse":
-                    var dobSortedReverse = (from r in TestData
-                                     orderby r.DateOfBirth descending
-                                     select r).ToList();
-                    return JsonConvert.SerializeObject(dobSortedReverse);
+                    case "birthdate_reverse":
+                        var dobSortedReverse = (from r in TestData
+                                                orderby r.DateOfBirth descending
+                                                select r).ToList();
+                        return JsonConvert.SerializeObject(dobSortedReverse);
 
-                case "name":
-                    var nameSorted = (from r in TestData
-                                      orderby r.LastName, r.FirstName
-                                      select r).ToList();
-                    return JsonConvert.SerializeObject(nameSorted);
+                    case "name":
+                        var nameSorted = (from r in TestData
+                                          orderby r.LastName, r.FirstName
+                                          select r).ToList();
+                        return JsonConvert.SerializeObject(nameSorted);
 
-                default: return JsonConvert.SerializeObject(TestData);
+                    default: return JsonConvert.SerializeObject(TestData);
+                }
+            }
+            catch (Exception e)
+            {
+                return $"Exception occurred while returning sorted data\n" +
+                    $"Search Term: {searchWord}\n" +
+                    $"{e.Message}\n" +
+                    $"{e.InnerException}";
             }
         }
 
@@ -73,26 +91,47 @@ namespace RESTfulAPI.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Post()
         {
-            var recordString = await Request.Content.ReadAsStringAsync();
-            var helper = new RecordParser.ParseHelper();
-            var delimArray = new char[] { '|', ',', ' ' };
-            var result = helper.SplitAndSafeStringLine(recordString);
-            var newRecord = new Record(result);
-            TestData.Add(newRecord);
-            return new HttpResponseMessage(HttpStatusCode.Accepted);            
+            var response = new HttpResponseMessage();
+            try
+            {
+                var recordString = await Request.Content.ReadAsStringAsync();
+                if (string.IsNullOrEmpty(recordString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
+                
+                var helper = new ParseHelper();
+                var result = helper.SplitAndSafeStringLine(recordString);
+                if (!ValidateStringArray(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
+
+                var newRecord = new Record(result);
+                TestData.Add(newRecord);
+                response.StatusCode = HttpStatusCode.Accepted;
+                response.Content = new StringContent(JsonConvert.SerializeObject(TestData));
+            }
+            catch (Exception e)
+            {
+                response = RequestNotAcceptable($"Post request threw an exception:\n{e.Message}\n{e.InnerException}");
+            }
+
+            return response;
         }
 
-        // POST api/values
-        //public HttpResponseMessage Post([FromBody]Record record)
-        //{
-        //    var recordString = $"{record.LastName}, {record.FirstName}, {record.Gender}, {record.FavoriteColor}, {record.DateOfBirth.ToString("M/d/yyyy")}";
+        private HttpResponseMessage RequestNotAcceptable(string message)
+        {
+            var response = new HttpResponseMessage();
+            response.StatusCode = HttpStatusCode.NotAcceptable;
+            response.Content = new StringContent(message);
 
-        //    if (ModelState.IsValid)
-        //    {
-        //        _service.Add(comment);
-        //        return Request.CreateResponse(HttpStatusCode.Created, comment);
-        //    }
-        //    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, ModelState);
-        //}
+            return response;
+        }
+
+        private bool ValidateStringArray(IEnumerable<string> stringArray)
+        {
+            if (stringArray == null
+                || !stringArray.Any()
+                || stringArray.Count() < 5
+                || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str)))
+                return false;
+
+            return true;
+        }
     }
 }

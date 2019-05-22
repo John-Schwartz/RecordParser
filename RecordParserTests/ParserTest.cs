@@ -10,7 +10,7 @@ using System.Linq;
 namespace RecordParserTests
 {
     [TestClass]
-    public class UnitTest1
+    public class ParserTest
     {
         
 
@@ -40,11 +40,11 @@ namespace RecordParserTests
             var listOfObjectDataLists = helper.ReadFileAndSplitLines(filePath,  new[] { '|', ',', ' ' });
             for (var o = 0; o < 3; o++)
             {
-                var outerList = expectedResult[o];
-                var outerTestList = listOfObjectDataLists.ElementAt(o).ToList();
+                var expectedList = expectedResult[o];
+                var testList = listOfObjectDataLists.ElementAt(o).ToList();
                 for (var i = 0; i < 5; i++)
                 {
-                    Assert.AreEqual(outerList[i], outerTestList[i]);
+                    Assert.AreEqual(expectedList[i], testList[i]);
                 }
             }
 

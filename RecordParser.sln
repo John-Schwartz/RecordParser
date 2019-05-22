@@ -12,7 +12,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParserTests", "Record
 		{35DD5CE7-0D1F-4376-995C-69C74715E809} = {35DD5CE7-0D1F-4376-995C-69C74715E809}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestProject1", "UnitTestProject1\UnitTestProject1.csproj", "{15C0CE1C-3929-4286-953F-86BF60CDAA22}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestfulAPITests", "UnitTestProject1\RestfulAPITests.csproj", "{15C0CE1C-3929-4286-953F-86BF60CDAA22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
