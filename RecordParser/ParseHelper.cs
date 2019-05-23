@@ -13,23 +13,27 @@ namespace RecordParser
         public void PrintResults(List<Record> RecordList)
         {
             Console.WriteLine("\n\nSorted by Gender, then last name descending");
-            var sortedList = (from p in RecordList
-                              orderby p.Gender, p.LastName ascending
-                              select p).ToList();
-            sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
+            var genderSortedList = GetByGender(RecordList);
+            genderSortedList.ForEach(x => Console.WriteLine(x.ToString()));
 
             Console.WriteLine("\n\nSorted by Date Of Birth");
-            sortedList = (from p in RecordList
-                          orderby p.DateOfBirth ascending
-                          select p).ToList();
-            sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
+            var dobSortedList = GetByBirthdate(RecordList);
+            dobSortedList.ForEach(x => Console.WriteLine(x.ToString()));
 
             Console.WriteLine("\n\nSorted by Last Name");
-            sortedList = (from p in RecordList
-                          orderby p.LastName descending
-                          select p).ToList();
-            sortedList.ForEach(x => Console.WriteLine(x.GetFormattedString()));
+            var nameSortedList = GetByLastname(RecordList);
+            nameSortedList.ForEach(x => Console.WriteLine(x.ToString()));
         }
+
+        public List<Record> GetByGender(IEnumerable<Record> RecordList) => (from p in RecordList
+                                                                            orderby p.Gender, p.LastName ascending
+                                                                            select p).ToList();
+        public List<Record> GetByBirthdate(IEnumerable<Record> RecordList) => (from p in RecordList
+                                                                               orderby p.DateOfBirth ascending
+                                                                               select p).ToList();
+        public List<Record> GetByLastname(IEnumerable<Record> RecordList) => (from p in RecordList
+                                                                              orderby p.LastName descending
+                                                                              select p).ToList();
 
         // Takes any object and safely executes ToString, with optional string trimming. Returns an empty string if any part failed.
         public string SafeString(object obj, bool trimString = true)
@@ -41,9 +45,7 @@ namespace RecordParser
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath)
         {
             if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return null;
-            
 
-            
             var returnList = new List<IEnumerable<string>>();
             try
             {
@@ -55,7 +57,7 @@ namespace RecordParser
                 {
                     if (string.IsNullOrEmpty(recordLine)) continue;
                     var stringArray = SplitAndSafeStringLine(recordLine);
-                    if (StringArrayIsValid(stringArray)) returnList.Add(SplitAndSafeStringLine(recordLine));                    
+                    if (StringArrayIsValid(stringArray)) returnList.Add(SplitAndSafeStringLine(recordLine));
                 }
             }
             catch (Exception e)
@@ -86,7 +88,6 @@ namespace RecordParser
         // Remove any empty string, remaining delims or whitespace elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
-            var delimArray = ;
             var stringRecordObject = inputString?.Split(new char[] { '|', ',', ' ' }, StringSplitOptions.None).ToList() ?? new List<string>();
             stringRecordObject.ForEach(field => { field = SafeString(field); });
             stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == null);

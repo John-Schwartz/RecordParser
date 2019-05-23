@@ -22,10 +22,8 @@ namespace RESTfulAPI.Controllers
         public RecordsController()
         {
             TestData = new List<Record>();
-            for (var i = 0; i < 5; i++)
-            {
-                TestData.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
-            }
+            //TestData.Add(new Record("Downy", "Robert", "M", "Purple", "11/26/1992"));
+            
         }
         
         public string Get()
@@ -61,13 +59,7 @@ namespace RESTfulAPI.Controllers
                         var dobSorted = (from r in TestData
                                          orderby r.DateOfBirth
                                          select r).ToList();
-                        return JsonConvert.SerializeObject(dobSorted);
-
-                    //case "birthdate_reverse":
-                    //    var dobSortedReverse = (from r in TestData
-                    //                            orderby r.DateOfBirth descending
-                    //                            select r).ToList();
-                    //    return JsonConvert.SerializeObject(dobSortedReverse);
+                        return JsonConvert.SerializeObject(dobSorted);                        
 
                     case "name":
                         var nameSorted = (from r in TestData

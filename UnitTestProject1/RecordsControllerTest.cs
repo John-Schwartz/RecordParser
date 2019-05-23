@@ -25,8 +25,7 @@ namespace UnitTestProject1
             Assert.AreEqual(controllerResult, expectedResults);
         }
 
-        [TestMethod]
-        public void GetWithSearch_ReturnsAllSortedRecords()
+        public void GenderSortTest()
         {
             var testRecords = GetTestRecords();
             var controller = new RecordsController();
@@ -37,12 +36,20 @@ namespace UnitTestProject1
             var expectedResults = JsonConvert.SerializeObject(genderSorted);
             var controllerResult = controller.Get("gender");
             Assert.AreEqual(controllerResult, expectedResults);
+            //Assert.IsTrue(.First(rec => rec));
+        }
+
+        [TestMethod]
+        public void GetWithSearch_ReturnsAllSortedRecords()
+        {
+            var testRecords = GetTestRecords();
+            var controller = new RecordsController();
 
             var dobSorted = from r in testRecords
                             orderby r.DateOfBirth
                             select r;
-            expectedResults = JsonConvert.SerializeObject(dobSorted);
-            controllerResult = controller.Get("birthdate");
+            var expectedResults = JsonConvert.SerializeObject(dobSorted);
+            var controllerResult = controller.Get("birthdate");
             Assert.AreEqual(controllerResult, expectedResults);
 
             var nameSorted = (from r in testRecords
@@ -62,7 +69,7 @@ namespace UnitTestProject1
         {
             // Arrange
             RecordsController controller = new RecordsController();
-            Record newRecord = new Record("Downy", "Robert", "M", "Purple", new DateTime(1992, 11, 26));
+            Record newRecord = new Record("Downy", "Robert", "M", "Purple", "11/26/1992");
             var testRecords = GetTestRecords();
 
             controller.Request = new HttpRequestMessage
@@ -95,16 +102,47 @@ namespace UnitTestProject1
             Assert.AreEqual(controller.Get(), JsonConvert.SerializeObject(testRecords));
             //Assert.AreEqual(JsonConvert.SerializeObject(await returnedContent), JsonConvert.SerializeObject(testRecords));
         }
-        
-        private List<Record> GetTestRecords()
+
+        private List<Record> GetValidTestRecords()
         {
-            var testRecords = new List<Record>();
-            for (var i = 0; i < 5; i++)
+            return new List<Record>
             {
-                testRecords.Add(new Record($"LName{i}", $"FName{i}", $"{(i % 2 == 0 ? 'M' : 'F')}", $"Color{i}", new DateTime(2001 + i, 1 + i, 1 + i)));
-            }
-            return testRecords;
+                new Record("Smith", "Robert", "M", "Purple", "11/26/1992"),
+                new Record("Zebedane", "Zebediah", "Male", "Purple", "10/26/1982"),
+                new Record("Does", "Jane", "FEM", "yello", "2/19/1942" ),
+                new Record("Cooper", "Sue", "F", "yello", "2/19/1942" ),
+                new Record("McCoy", "Mark", "male", "yello", "2/19/1942" ),
+                new Record("Danielson", "Jennifer", "Female", "yello", "2/19/1942" )
+            };
         }
+
+        private List<string> GetValidTestStrings()
+        {
+            return new List<string>
+            {
+                "Smith Robert M Purple 2/4/1988",
+                "Zebedane Zebediah Male Purple 3/3/1987",
+                "Does, Jane, FEM, yellow, 2/19/1942",
+                "Cooper, Sue, F, y, 5/17/1976",
+                "McCoy Mark male grn 1/2/1990",
+                "Danielson Jennifer Female BLUE 12/1/2001"
+            };
+        }
+
+        private List<string> GetInvalidTestStrings()
+        {
+            return new List<string>
+            {
+                "Smith M Purple 2/4/1988",
+                "Zebedane Zebediah Male Purple Unknown",
+                "Does, Jane, green, FEM, 5/17/1976",
+                "Cooper, Sue, F, y, 99/99/9999",
+                "McCoy Mark male grn 1 / 2 / 1990",
+                "Danielson Jennifer true BLUE 122/1/2001"
+            };
+        }
+
+
 
         //private List<Record> GetBadTestRecords()
         //{

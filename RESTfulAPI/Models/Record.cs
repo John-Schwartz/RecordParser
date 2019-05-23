@@ -13,13 +13,13 @@ namespace RESTfulAPI.Models
         public string FavoriteColor { get; set; }
         public DateTime DateOfBirth { get; set; }
 
-        public Record(string lastName, string firstName, string gender, string favoriteColor, DateTime dob)
+        public Record(string lastName, string firstName, string gender, string favoriteColor, string dob)
         {
             LastName = lastName;
             FirstName = firstName;
             Gender = gender;
             FavoriteColor = favoriteColor;
-            DateOfBirth = dob;
+            DateOfBirth = DateTime.Parse(dob);
         }
 
         public Record(IEnumerable<string> objStringData)
@@ -30,8 +30,6 @@ namespace RESTfulAPI.Models
             Gender = list[2];
             FavoriteColor = list[3];
             DateOfBirth = DateTime.Parse(list[4]);
-        }
-
-
+        }        
     }
 }

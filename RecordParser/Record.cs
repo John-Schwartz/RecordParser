@@ -31,23 +31,12 @@ namespace RecordParser
             FirstName = stringFields.ElementAt(1);
             Gender = stringFields.ElementAt(2);
             FavoriteColor = stringFields.ElementAt(3);
-            DateOfBirth = ParseDateString(stringFields.ElementAt(4));
+            DateOfBirth = DateTime.Parse(stringFields.ElementAt(4));
         }
 
-        public DateTime ParseDateString(string dateString)
+        public override string ToString()
         {
-            DateTime.TryParse(dateString, out DateTime result);
-            if (result == null || result == DateTime.MinValue)
-            {
-                return DateTime.MinValue;
-            }
-            return result;
-        }
-
-        public string GetFormattedString()
-        {
-            return ("Name: {0,-30} | Gender: {1,-7} | Favorite Color: {2,-15} | DOB: {3,-10}",
-                   $"{LastName}, {FirstName}", Gender, FavoriteColor, DateOfBirth.ToString("M/d/yyyy")).ToString();
+            return $"{LastName}, {FirstName}, {Gender}, {FavoriteColor}, {DateOfBirth.ToString("M/d/yyyy")}";
         }
     }
 }
