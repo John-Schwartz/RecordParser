@@ -79,6 +79,8 @@ namespace RecordParser
                 ) return false;
             if (!stringArray.ElementAt(2).StartsWith("m", true, CultureInfo.InvariantCulture)
                 && !stringArray.ElementAt(2).StartsWith("f", true, CultureInfo.InvariantCulture)
+                && !stringArray.ElementAt(2).StartsWith("M", true, CultureInfo.InvariantCulture)
+                && !stringArray.ElementAt(2).StartsWith("F", true, CultureInfo.InvariantCulture)
                 ) return false;
 
             return true;

@@ -25,6 +25,15 @@ namespace RecordParser
             DateOfBirth = dob;
         }
 
+        public Record(string lastName, string firstName, string gender, string favoriteColor, string dob)
+        {
+            LastName = lastName;
+            FirstName = firstName;
+            Gender = gender;
+            FavoriteColor = favoriteColor;
+            DateOfBirth = DateTime.Parse(dob);
+        }
+
         public Record(IEnumerable<string> stringFields)
         {
             LastName = stringFields.ElementAt(0);

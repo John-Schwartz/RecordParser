@@ -17,6 +17,7 @@ namespace RESTfulAPI.Controllers
     public class RecordsController : ApiController
     {
 
+        public ParseHelper Helper = new ParseHelper();
         public List<Record> TestData { get; set; }
 
         public RecordsController()
@@ -81,22 +82,24 @@ namespace RESTfulAPI.Controllers
 
         // Request body media type text, no explicit quotation marks e.g.: Downy | Robert | M | Purple | 11/26/1992
         [HttpPost]
-        public async Task<HttpResponseMessage> Post()
+        public HttpResponseMessage Post([FromBody] string inputString)
         {
             var response = new HttpResponseMessage();
             try
             {
-                var recordString = await Request.Content.ReadAsStringAsync();
+                //var recordString = await Request.Content.ReadAsStringAsync();
+                var recordString = inputString;
                 if (string.IsNullOrEmpty(recordString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
                 
                 var helper = new ParseHelper();
                 var result = helper.SplitAndSafeStringLine(recordString);
                 if (!helper.StringArrayIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
-                var newRecord = new Record(result);
-                TestData.Add(newRecord);
+                var newRecord = new Record(result);                
 
-                return Request.CreateResponse(HttpStatusCode.Accepted, JsonConvert.SerializeObject(TestData));
+                TestData.Add(newRecord);
+                response.StatusCode = HttpStatusCode.Accepted;
+                response.Content = new StringContent(JsonConvert.SerializeObject(TestData));
             }
             catch (Exception e)
             {
