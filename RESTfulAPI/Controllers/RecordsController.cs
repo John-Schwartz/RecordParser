@@ -99,7 +99,7 @@ namespace RESTfulAPI.Controllers
                 
                 var helper = new ParseHelper();
                 var result = helper.SplitAndSafeStringLine(recordString);
-                if (!ValidateStringArray(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
+                if (!helper.StringArrayIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
                 var newRecord = new Record(result);
                 TestData.Add(newRecord);
@@ -121,17 +121,6 @@ namespace RESTfulAPI.Controllers
             response.Content = new StringContent(message);
 
             return response;
-        }
-
-        private bool ValidateStringArray(IEnumerable<string> stringArray)
-        {
-            if (stringArray == null
-                || !stringArray.Any()
-                || stringArray.Count() < 5
-                || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str)))
-                return false;
-
-            return true;
         }
     }
 }

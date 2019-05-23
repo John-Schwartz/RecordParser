@@ -54,8 +54,11 @@ namespace RecordParser
                 // Once split and cleaned up, add the string array to the return list
                 foreach (var recordLine in allLines)
                 {
-                    if (string.IsNullOrEmpty(recordLine)) continue;
-                    returnList.Add(SplitAndSafeStringLine(recordLine));
+                    if (!string.IsNullOrEmpty(recordLine) && 
+                        StringArrayIsValid(SplitAndSafeStringLine(recordLine)))
+                    {
+                        returnList.Add(SplitAndSafeStringLine(recordLine));
+                    }
                 }
             }
             catch (Exception e)
@@ -67,13 +70,24 @@ namespace RecordParser
             return returnList;
         }
 
+        public bool StringArrayIsValid(IEnumerable<string> stringArray)
+        {
+            if (stringArray == null
+                || !stringArray.Any()
+                || stringArray.Count() < 5
+                || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str)))
+                return false;
+
+            return true;
+        }
+
         // Split the input string by the delimiters, then run safestring on each split string item
         // Remove any empty string, remaining delims or whitespace elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
             var stringRecordObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
             stringRecordObject.ForEach(field => { field = SafeString(field); });
-            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == string.Empty);
+            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrEmpty(x));
             return stringRecordObject;
         }
 
