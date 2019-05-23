@@ -14,23 +14,18 @@ namespace RecordParser
         {
             try
             {
+                if (args.Length == 0) return;
+
                 var objectList = new List<Record>();
                 var helper = new ParseHelper();
-                var delimArray = new char[] { '|', ',', ' ' };
-                var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
 
-                Console.WriteLine("Start");
+                foreach(string file in args)
+                {
+                    var recordList = helper.ReadFileAndSplitLines(file).ToList(); // Read each line, split by delimiters, return cleaned up string array
+                    recordList.ForEach(strArray => objectList.Add(new Record(strArray))); // for each record data string array, add to list
+                }
 
-                // Read each line of the the file, split the data by the delimiters, return the cleaned up string array
-                var recordList = helper.ReadFileAndSplitLines(filePath, delimArray).ToList();
-                // for each record data string array, add it to the list
-                recordList.ForEach(strArray => objectList.Add(new Record(strArray)));
-
-                //Outputs sorted with linq then call Console.WriteLine on the formatted string;
-                helper.PrintResults(objectList);
-
-                Console.WriteLine("\n\n Finished");
-                Console.ReadKey();
+                helper.PrintResults(objectList);//Outputs sorted with linq then call Console.WriteLine on the formatted string;
             }
             catch (Exception e)
             {

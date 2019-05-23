@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -37,14 +38,12 @@ namespace RecordParser
             return obj?.ToString() ?? string.Empty;
         }
 
-        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath, char[] delims)
+        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
-            {
-                Console.WriteLine("Invalid path");
-                return null;
-            }
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return null;
+            
 
+            
             var returnList = new List<IEnumerable<string>>();
             try
             {
@@ -54,11 +53,9 @@ namespace RecordParser
                 // Once split and cleaned up, add the string array to the return list
                 foreach (var recordLine in allLines)
                 {
-                    if (!string.IsNullOrEmpty(recordLine) && 
-                        StringArrayIsValid(SplitAndSafeStringLine(recordLine)))
-                    {
-                        returnList.Add(SplitAndSafeStringLine(recordLine));
-                    }
+                    if (string.IsNullOrEmpty(recordLine)) continue;
+                    var stringArray = SplitAndSafeStringLine(recordLine);
+                    if (StringArrayIsValid(stringArray)) returnList.Add(SplitAndSafeStringLine(recordLine));                    
                 }
             }
             catch (Exception e)
@@ -75,8 +72,12 @@ namespace RecordParser
             if (stringArray == null
                 || !stringArray.Any()
                 || stringArray.Count() < 5
-                || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str)))
-                return false;
+                || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str))
+                || ParseDateString(stringArray.ElementAt(4)) == DateTime.MinValue
+                ) return false;
+            if (!stringArray.ElementAt(2).StartsWith("m", true, CultureInfo.InvariantCulture)
+                && !stringArray.ElementAt(2).StartsWith("f", true, CultureInfo.InvariantCulture)
+                ) return false;
 
             return true;
         }
@@ -85,9 +86,10 @@ namespace RecordParser
         // Remove any empty string, remaining delims or whitespace elements, then return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
-            var stringRecordObject = inputString?.Split('|', ',', ' ').ToList() ?? new List<string>();
+            var delimArray = ;
+            var stringRecordObject = inputString?.Split(new char[] { '|', ',', ' ' }, StringSplitOptions.None).ToList() ?? new List<string>();
             stringRecordObject.ForEach(field => { field = SafeString(field); });
-            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrEmpty(x));
+            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == null);
             return stringRecordObject;
         }
 
@@ -95,6 +97,16 @@ namespace RecordParser
         {
             Console.WriteLine($"{functionName} - {humanMessage}\n");
             Console.WriteLine(e.Message);
+        }
+
+        private DateTime ParseDateString(string dateString)
+        {
+            DateTime.TryParse(dateString, out DateTime result);
+            if (result == null || result == DateTime.MinValue)
+            {
+                return DateTime.MinValue;
+            }
+            return result;
         }
     }
 }
