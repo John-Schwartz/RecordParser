@@ -13,16 +13,13 @@ namespace RecordParser
         public void PrintResults(List<Record> RecordList)
         {
             Console.WriteLine("\n\nSorted by Gender, then last name descending");
-            var genderSortedList = GetByGender(RecordList);
-            genderSortedList.ForEach(x => Console.WriteLine(x.ToString()));
+            GetByGender(RecordList).ForEach(x => Console.WriteLine(x.ToString()));
 
             Console.WriteLine("\n\nSorted by Date Of Birth");
-            var dobSortedList = GetByBirthdate(RecordList);
-            dobSortedList.ForEach(x => Console.WriteLine(x.ToString()));
+            GetByBirthdate(RecordList).ForEach(x => Console.WriteLine(x.ToString()));
 
             Console.WriteLine("\n\nSorted by Last Name");
-            var nameSortedList = GetByLastname(RecordList);
-            nameSortedList.ForEach(x => Console.WriteLine(x.ToString()));
+            GetByLastname(RecordList).ForEach(x => Console.WriteLine(x.ToString()));
         }
 
         public List<Record> GetByGender(IEnumerable<Record> RecordList) => (from p in RecordList
@@ -57,7 +54,7 @@ namespace RecordParser
                 {
                     if (string.IsNullOrEmpty(recordLine)) continue;
                     var stringArray = SplitAndSafeStringLine(recordLine);
-                    if (StringArrayIsValid(stringArray)) returnList.Add(SplitAndSafeStringLine(recordLine));
+                    if (StringArrayIsValid(stringArray)) returnList.Add(stringArray);
                 }
             }
             catch (Exception e)
@@ -77,10 +74,11 @@ namespace RecordParser
                 || !stringArray.ToList().TrueForAll(str => !string.IsNullOrEmpty(str))
                 || ParseDateString(stringArray.ElementAt(4)) == DateTime.MinValue
                 ) return false;
-            if (!stringArray.ElementAt(2).StartsWith("m", true, CultureInfo.InvariantCulture)
-                && !stringArray.ElementAt(2).StartsWith("f", true, CultureInfo.InvariantCulture)
-                && !stringArray.ElementAt(2).StartsWith("M", true, CultureInfo.InvariantCulture)
-                && !stringArray.ElementAt(2).StartsWith("F", true, CultureInfo.InvariantCulture)
+            var genderValue = stringArray.ElementAt(2);
+            if (genderValue.StartsWith("m", true, CultureInfo.CurrentCulture)
+                || genderValue.StartsWith("f", true, CultureInfo.CurrentCulture)
+                //|| genderValue.StartsWith("M", true, CultureInfo.CurrentCulture)
+                //|| genderValue.StartsWith("F", true, CultureInfo.CurrentCulture)
                 ) return false;
 
             return true;
@@ -92,7 +90,7 @@ namespace RecordParser
         {
             var stringRecordObject = inputString?.Split(new char[] { '|', ',', ' ' }, StringSplitOptions.None).ToList() ?? new List<string>();
             stringRecordObject.ForEach(field => { field = SafeString(field); });
-            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || x == null);
+            stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrEmpty(x));
             return stringRecordObject;
         }
 
