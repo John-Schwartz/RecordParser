@@ -18,13 +18,7 @@ namespace UnitTestProject1
     public class RecordsControllerTest
     {
         private ParseHelper Helper = new ParseHelper();
-
-        private async Task<string> readStringAsAsync(StringContent input)
-        {
-
-            return await input.ReadAsStringAsync();
-        }
-
+        
         [TestMethod]
         public void PostTest()
         {
@@ -36,25 +30,57 @@ namespace UnitTestProject1
                 var response = controller.Post(testString);
                 Assert.IsNotNull(response);
                 Assert.AreEqual(HttpStatusCode.Accepted, response.StatusCode);
-
-                jsonResponse = await readStringAsAsync(response.Content);
-                Assert.AreEqual(postCount, JsonConvert.DeserializeObject<List<Record>>(jsonResponse).Count());
-                postCount++;
             }
-
-            //List<Record> filledTestData = new List<Record>();
-
-            //Assert.IsNotNull(filledTestData);
-            //Assert.AreEqual(GetValidTestRecords(), filledTestData);
-            //Assert.AreNotEqual(0, filledTestData.Count());
-            //Assert.AreEqual(6, filledTestData.Count());
-
-
-            //string jsonString = controller.Get();
-            //List<Record> recordsFromGet = JsonConvert.DeserializeObject<List<Record>>(jsonString);
-            //Assert.AreEqual(GetValidTestRecords(), recordsFromGet);
-            //Assert.AreEqual(6, recordsFromGet.Count);
         }
+
+        [TestMethod]
+        public void GetTest()
+        {
+            RecordsController controller = new RecordsController();
+            var jsonResponse = "";
+            var postCount = 1;
+            foreach (var testString in GetValidTestStrings())
+            {
+                var response = controller.Post(testString);
+                Assert.IsNotNull(response);
+                Assert.AreEqual(HttpStatusCode.Accepted, response.StatusCode);
+            }
+        }
+
+        public void PostValid(ref RecordsController controller)
+        {
+            controller.Post("Smith Robert M Purple 2/4/1988");
+            controller.Post("Zebedane Zebediah Male Purple 3/3/1987");
+            controller.Post("Does, Jane, FEM, yellow, 2/19/1942");
+            controller.Post("Cooper, Sue, F, y, 5/17/1976");
+            controller.Post("McCoy Mark male grn 1/2/1990");
+            controller.Post("Danielson Jennifer Female BLUE 12/1/2001");
+        }
+
+        public void PostInvalid(ref RecordsController controller)
+        {
+            controller.Post("blahblahblah");
+            controller.Post("Error: incorrect number of elements");
+            controller.Post("");
+            controller.Post("Person|Mister|Female|Lobster|NotADate");
+            controller.Post("Rogers|Fred|Saint|Love|3/20/1928");
+        }
+
+        ////jsonResponse = await readStringAsAsync(response.Content);
+        //Assert.AreEqual(postCount, JsonConvert.DeserializeObject<List<Record>>(jsonResponse).Count());
+        //postCount++;
+        //List<Record> filledTestData = new List<Record>();
+
+        //Assert.IsNotNull(filledTestData);
+        //Assert.AreEqual(GetValidTestRecords(), filledTestData);
+        //Assert.AreNotEqual(0, filledTestData.Count());
+        //Assert.AreEqual(6, filledTestData.Count());
+
+
+        //string jsonString = controller.Get();
+        //List<Record> recordsFromGet = JsonConvert.DeserializeObject<List<Record>>(jsonString);
+        //Assert.AreEqual(GetValidTestRecords(), recordsFromGet);
+        //Assert.AreEqual(6, recordsFromGet.Count);
 
 
 
