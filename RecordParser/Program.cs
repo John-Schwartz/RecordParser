@@ -19,11 +19,9 @@ namespace RecordParser
                 var objectList = new List<Record>();
                 var helper = new ParseHelper();
 
-                foreach(string file in args)
-                {
-                    var recordList = helper.ReadFileAndSplitLines(file).ToList(); // Read each line, split by delimiters, return cleaned up string array
-                    recordList.ForEach(strArray => objectList.Add(new Record(strArray))); // for each record data string array, add to list
-                }
+                var recordList = helper.ReadFileAndSplitLines(args).ToList(); // Read each line, split by delimiters, return cleaned up string array
+                recordList.ForEach(strArray => objectList.Add(new Record(strArray))); // for each record data string array, add to list
+
 
                 helper.PrintResults(objectList);//Outputs sorted with linq then call Console.WriteLine on the formatted string;
             }
@@ -34,6 +32,6 @@ namespace RecordParser
         }
     }
 
-    
+
 }
 

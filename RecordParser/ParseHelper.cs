@@ -39,9 +39,41 @@ namespace RecordParser
             return obj?.ToString() ?? string.Empty;
         }
 
+        public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(IEnumerable<string> filePaths)
+        {
+            var returnList = new List<IEnumerable<string>>();
+            foreach (var filePath in filePaths)
+            {
+                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) continue;
+
+                try
+                {
+                    var allLines = File.ReadAllLines(filePath);
+
+                    // For each line in the file, if it isn't empty, split by the delimiter and trim space.
+                    // Once split and cleaned up, add the string array to the return list
+                    foreach (var recordLine in allLines)
+                    {
+                        if (string.IsNullOrEmpty(recordLine)) continue;
+                        var stringArray = SplitAndSafeStringLine(recordLine);
+                        if (stringArray != null) returnList.Add(stringArray);
+                    }
+                }
+                catch (Exception e)
+                {
+                    var message = "Exception thrown while creating record dictionary";
+                    WriteExceptionMessage(e, "ReadFileAndSplitByDelim", message);
+                }
+
+
+            }
+
+            return returnList;
+        }
+
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath)
         {
-            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return null;
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) return new List<List<string>>();
 
             var returnList = new List<IEnumerable<string>>();
             try
@@ -54,7 +86,7 @@ namespace RecordParser
                 {
                     if (string.IsNullOrEmpty(recordLine)) continue;
                     var stringArray = SplitAndSafeStringLine(recordLine);
-                    if (StringArrayIsValid(stringArray)) returnList.Add(stringArray);
+                    if (stringArray != null) returnList.Add(stringArray);
                 }
             }
             catch (Exception e)
@@ -91,6 +123,7 @@ namespace RecordParser
             var stringRecordObject = inputString?.Split(new char[] { '|', ',', ' ' }, StringSplitOptions.None).ToList() ?? new List<string>();
             stringRecordObject.ForEach(field => { field = SafeString(field); });
             stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrEmpty(x));
+            if (!StringArrayIsValid(stringRecordObject)) return new string[0];
             return stringRecordObject;
         }
 
