@@ -1,10 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RecordParserTests;
-using RecordParser;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using ParseHelperLibrary;
 
 namespace RecordParserTests
 {
@@ -22,41 +20,7 @@ namespace RecordParserTests
             Assert.AreEqual(helper.SafeString("    "), "");
             Assert.AreEqual(helper.SafeString(null), "");
         }
-
-        //[TestMethod]
-        //public void ReadFileAndSplitLines_Test()
-        //{
-        //    var helper = new ParseHelper();
-        //    //var filePath = "\\\\abqdatw01\\users\\john.schwartz\\Desktop\\RecordParser\\RecordParser\\RecordParser\\UnitTestRecordFile.txt";
-
-        //    Assert.IsTrue(File.Exists(filePath));
-
-        //    var expectedResult = new List<List<string>>
-        //            {
-        //                new List<string> { "Downy", "Robert", "M", "Purple", "11/26/1992"},
-        //                new List<string> { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982"},
-        //                new List<string> { "Does", "Jane", "FEM", "yello", "2/19/1942" }
-        //            };
-
-        //    var listOfObjectDataLists = helper.ReadFileAndSplitLines(filePath);
-        //    var listOfOutputRecords = new List<Record>();
-        //    Assert.IsNotNull(listOfObjectDataLists);
-
-        //    for (var o = 0; o < 3; o++)
-        //    {
-        //        var expectedList = expectedResult[o];
-        //        var testList = listOfObjectDataLists.ElementAt(o).ToList();
-        //        for (var i = 0; i < 5; i++)
-        //        {
-        //            Assert.IsNotNull(expectedList[i]);
-        //            Assert.IsNotNull(testList[i]);
-        //            Assert.AreEqual(expectedList[i], testList[i]);
-        //        }
-        //    }
-
-        //    //expectedResult.ForEach(res => )
-        //}
-
+        
         [TestMethod]
         public void NoArgumentsTest()
         {

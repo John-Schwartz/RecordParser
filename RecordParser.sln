@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.645
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecordParser", "RecordParser\RecordParser.csproj", "{35DD5CE7-0D1F-4376-995C-69C74715E809}"
 EndProject
@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestfulAPITests", "UnitTest
 	ProjectSection(ProjectDependencies) = postProject
 		{EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9} = {EC9F6B6F-B3D2-49ED-AA3E-49EB3FDAE3F9}
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ParseHelperLibrary", "ParseHelperLibrary\ParseHelperLibrary.csproj", "{EDB60163-C587-43DE-B8D3-3315B881A3D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15C0CE1C-3929-4286-953F-86BF60CDAA22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDB60163-C587-43DE-B8D3-3315B881A3D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDB60163-C587-43DE-B8D3-3315B881A3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDB60163-C587-43DE-B8D3-3315B881A3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDB60163-C587-43DE-B8D3-3315B881A3D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,15 +1,10 @@
-﻿//using RESTfulAPI.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-//using System.Web.Mvc;
 using Newtonsoft.Json;
-using RecordParser;
-using System.Threading.Tasks;
-//using System.Web.Mvc;
+using ParseHelperLibrary;
 
 namespace RESTfulAPI.Controllers
 {
@@ -23,7 +18,6 @@ namespace RESTfulAPI.Controllers
         public RecordsController()
         {
             TestData = new List<Record>();
-            //TestData.Add(new Record("Downy", "Robert", "M", "Purple", "11/26/1992"));
 
         }
 
@@ -57,12 +51,10 @@ namespace RESTfulAPI.Controllers
             var response = new HttpResponseMessage();
             try
             {
-                //var recordString = await Request.Content.ReadAsStringAsync();
-                var recordString = inputString;
-                if (string.IsNullOrEmpty(recordString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
+                if (string.IsNullOrEmpty(inputString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
 
                 var helper = new ParseHelper();
-                var result = helper.SplitAndSafeStringLine(recordString);
+                var result = helper.SplitAndSafeStringLine(inputString);
                 if (!helper.StringArrayIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
                 var newRecord = new Record(result);
