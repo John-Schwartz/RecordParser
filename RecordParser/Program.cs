@@ -10,7 +10,9 @@ namespace RecordParser
         public static void Main(string[] args)
         {
             // if no args return
-            if (args.Length == 0) return;
+            if (args.Length == 0) {
+                Console.WriteLine("No filepath parameters passed to Main");
+            }
 
             var objectList = new List<Record>();
             var helper = new ParseHelper();

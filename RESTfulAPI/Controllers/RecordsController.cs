@@ -44,21 +44,25 @@ namespace RESTfulAPI.Controllers
 
         }
 
-        // Request body media type text, no explicit quotation marks e.g.: Downy | Robert | M | Purple | 11/26/1992
+        // Request body media type text e.g.: Downy | Robert | M | Purple | 11/26/1992
         [HttpPost]
         public HttpResponseMessage Post([FromBody] string inputString)
         {
             var response = new HttpResponseMessage();
             try
             {
+                // If the string is empty, return NotAcceptable
                 if (string.IsNullOrEmpty(inputString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
 
                 var helper = new ParseHelper();
                 var result = helper.SplitAndSafeStringLine(inputString);
-                if (!helper.StringArrayIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
+
+                // if the Split/trimmed string array is not valid, return NotAcceptable
+                if (!helper.StringCollectionIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
                 var newRecord = new Record(result);
 
+                // if the string array is valid, add it to test data and return the full json
                 TestData.Add(newRecord);
                 response.StatusCode = HttpStatusCode.Accepted;
                 response.Content = new StringContent(JsonConvert.SerializeObject(TestData));

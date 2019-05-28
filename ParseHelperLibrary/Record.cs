@@ -15,33 +15,21 @@ namespace ParseHelperLibrary
 
         public Record() { }
 
-        public Record(string lastName, string firstName, string gender, string favoriteColor, DateTime dob)
-        {
-            LastName = lastName;
-            FirstName = firstName;
-            Gender = gender;
-            FavoriteColor = favoriteColor;
-            DateOfBirth = dob;
-        }
-
-        public Record(string lastName, string firstName, string gender, string favoriteColor, string dob)
-        {
-            LastName = lastName;
-            FirstName = firstName;
-            Gender = gender;
-            FavoriteColor = favoriteColor;
-            DateOfBirth = DateTime.Parse(dob);
-        }
-
         public Record(IEnumerable<string> stringFields)
         {
-            LastName = stringFields.ElementAt(0);
-            FirstName = stringFields.ElementAt(1);
-            Gender = stringFields.ElementAt(2);
-            FavoriteColor = stringFields.ElementAt(3);
-            DateOfBirth = DateTime.Parse(stringFields.ElementAt(4));
+            if (stringFields != null)
+            {
+                LastName = stringFields.ElementAt(0);
+                FirstName = stringFields.ElementAt(1);
+                Gender = stringFields.ElementAt(2);
+                FavoriteColor = stringFields.ElementAt(3);
+                DateTime.TryParse(stringFields.ElementAt(4), out DateTime parsedDate);
+                DateOfBirth = parsedDate;
+            }            
         }
 
+        // C# 6+ string interpolation: 
+        // Override object ToString to return nicely formatted string
         public override string ToString()
         {
             return $"{LastName}, {FirstName}, {Gender}, {FavoriteColor}, {DateOfBirth.ToString("M/d/yyyy")}";

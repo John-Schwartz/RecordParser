@@ -21,8 +21,9 @@ namespace UnitTestProject1
             RecordsController controller = new RecordsController();
 
             // Act
-            PostInvalid(ref controller); // attempt to insert invalid results
             PostValid(ref controller); // insert valid results (6 records)
+            PostInvalid(ref controller); // attempt to insert invalid results
+            
             var resultBirthdateJSON = controller.Get("birthdate");
             var resultBirthdate = JsonConvert.DeserializeObject<List<Record>>(resultBirthdateJSON);
 
@@ -90,8 +91,6 @@ namespace UnitTestProject1
             Assert.AreEqual(0, resultBirthdate.Count());
         }
 
-
-
         public void PostValid(ref RecordsController controller)
         {
             controller.Post("Smith Robert M Purple 2/4/1988");
@@ -115,12 +114,12 @@ namespace UnitTestProject1
         {
             return new List<Record>
             {
-                new Record("Smith", "Robert", "M", "Purple", "11/26/1992"),
-                new Record("Zebedane", "Zebediah", "Male", "Purple", "10/26/1982"),
-                new Record("Does", "Jane", "FEM", "yello", "2/19/1942" ),
-                new Record("Cooper", "Sue", "F", "yello", "2/19/1942" ),
-                new Record("McCoy", "Mark", "male", "yello", "2/19/1942" ),
-                new Record("Danielson", "Jennifer", "Female", "yello", "2/19/1942" )
+                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                new Record(new string[] {"Does", "Jane", "FEM", "yello", "2/19/1942" }),
+                new Record(new string[] {"Cooper", "Sue", "F", "yello", "2/19/1942" }),
+                new Record(new string[] {"McCoy", "Mark", "male", "yello", "2/19/1942" }),
+                new Record(new string[] {"Danielson", "Jennifer", "Female", "yello", "2/19/1942" })
             };
         }
 

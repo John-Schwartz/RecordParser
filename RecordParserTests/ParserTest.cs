@@ -58,9 +58,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record("Smith", "Robert", "M", "Purple", "11/26/1992"),
-                new Record("Zebedane", "Zebediah", "Male", "Purple", "10/26/1982"),
-                new Record("Doe", "Jane", "FEM", "yello", "2/19/1942" ),
+                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var genderResult = helper.GetByGender(recordList);
@@ -78,9 +78,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record("Smith", "Robert", "M", "Purple", "11/26/1992"),
-                new Record("Zebedane", "Zebediah", "Male", "Purple", "10/26/1982"),
-                new Record("Doe", "Jane", "FEM", "yello", "2/19/1942" ),
+                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var birthdateResult = helper.GetByBirthdate(recordList);
@@ -98,9 +98,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record("Smith", "Robert", "M", "Purple", "11/26/1992"),
-                new Record("Zebedane", "Zebediah", "Male", "Purple", "10/26/1982"),
-                new Record("Doe", "Jane", "FEM", "yello", "2/19/1942" ),
+                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var nameResult = helper.GetByLastname(recordList);
