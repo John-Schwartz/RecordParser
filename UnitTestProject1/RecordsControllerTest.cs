@@ -18,34 +18,85 @@ namespace UnitTestProject1
     public class RecordsControllerTest
     {
         private ParseHelper Helper = new ParseHelper();
-        
+
+
         [TestMethod]
-        public void PostTest()
+        public void BirthdateTest()
         {
+            // Arrange
             RecordsController controller = new RecordsController();
-            var jsonResponse = "";
-            var postCount = 1;
-            foreach (var testString in GetValidTestStrings())
-            {
-                var response = controller.Post(testString);
-                Assert.IsNotNull(response);
-                Assert.AreEqual(HttpStatusCode.Accepted, response.StatusCode);
-            }
+
+            // Act
+            PostInvalid(ref controller); // attempt to insert invalid results
+            PostValid(ref controller); // insert valid results (6 records)
+            var resultBirthdateJSON = controller.Get("birthdate");
+            var resultBirthdate = JsonConvert.DeserializeObject<List<Record>>(resultBirthdateJSON);
+
+            //Assert
+            Assert.IsNotNull(resultBirthdate);
+            Assert.AreNotEqual(0, resultBirthdate.Count());
+            Assert.AreEqual(6, resultBirthdate.Count());
+            Assert.AreEqual(DateTime.Parse("2/19/1942"), resultBirthdate.First().DateOfBirth);
+            Assert.AreEqual(DateTime.Parse("12/1/2001"), resultBirthdate.Last().DateOfBirth);
         }
 
         [TestMethod]
-        public void GetTest()
+        public void LastNameTest()
         {
+            // Arrange
             RecordsController controller = new RecordsController();
-            var jsonResponse = "";
-            var postCount = 1;
-            foreach (var testString in GetValidTestStrings())
-            {
-                var response = controller.Post(testString);
-                Assert.IsNotNull(response);
-                Assert.AreEqual(HttpStatusCode.Accepted, response.StatusCode);
-            }
+
+            // Act
+            PostValid(ref controller); // insert valid results (6 records)
+            PostInvalid(ref controller); // attempt to insert invalid results
+            var resultLastnameJSON = controller.Get("name");
+            var resultLastname = JsonConvert.DeserializeObject<List<Record>>(resultLastnameJSON);
+
+            //Assert
+            Assert.IsNotNull(resultLastname);
+            Assert.AreNotEqual(0, resultLastname.Count());
+            Assert.AreEqual(6, resultLastname.Count());
+            Assert.AreEqual("Zebedane", resultLastname.First().LastName);
+            Assert.AreEqual("Cooper", resultLastname.Last().LastName);
         }
+
+        [TestMethod]
+        public void GenderTest()
+        {
+            // Arrange
+            RecordsController controller = new RecordsController();
+
+            // Act
+            PostValid(ref controller); // insert valid results (6 records)
+            PostInvalid(ref controller); // attempt to insert invalid results
+            var resultJSON = controller.Get("gender");
+            var resultGender = JsonConvert.DeserializeObject<List<Record>>(resultJSON);
+
+            //Assert
+            Assert.IsNotNull(resultGender);
+            Assert.AreNotEqual(0, resultGender.Count());
+            Assert.AreEqual(6, resultGender.Count());
+            Assert.IsTrue(resultGender.First().Gender[0] == 'f' || resultGender.First().Gender[0] == 'F');
+            Assert.IsTrue(resultGender.Last().Gender[0] == 'm' || resultGender.Last().Gender[0] == 'M');
+        }
+
+        [TestMethod]
+        public void InvalidInputUnitTest()
+        {
+            // Arrange
+            RecordsController controller = new RecordsController();
+
+            // Act
+            PostInvalid(ref controller); // attempt to insert invalid results
+            var resultBirthdateJSON = controller.Get("birthdate");
+            var resultBirthdate = JsonConvert.DeserializeObject<List<Record>>(resultBirthdateJSON);
+
+            //Assert
+            Assert.IsNotNull(resultBirthdate);
+            Assert.AreEqual(0, resultBirthdate.Count());
+        }
+
+
 
         public void PostValid(ref RecordsController controller)
         {
@@ -62,8 +113,8 @@ namespace UnitTestProject1
             controller.Post("blahblahblah");
             controller.Post("Error: incorrect number of elements");
             controller.Post("");
-            controller.Post("Person|Mister|Female|Lobster|NotADate");
-            controller.Post("Rogers|Fred|Saint|Love|3/20/1928");
+            controller.Post("Person|Mister|Female|yellow|NotADate");
+            controller.Post("Rogers|Fred|NotAGender|Love|3/20/1928");
         }
 
         ////jsonResponse = await readStringAsAsync(response.Content);

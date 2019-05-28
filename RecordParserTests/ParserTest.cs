@@ -11,30 +11,6 @@ namespace RecordParserTests
     [TestClass]
     public class ParserTest
     {
-        //[TestMethod]
-        //public void MainTest()
-        //{
-        //    var objectList = new List<Record>();
-        //    var helper = new ParseHelper();
-        //    var delimArray = new char[] { '|', ',', ' ' };
-        //    var filePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
-        //    //var listOfInputStrings = new List<string> {
-        //    //    "Zebedane | Zebediah | M | Purple | 10/26/1982",
-        //    //    "Zebedane, Zebediah, M, Purple, 10/26/1982",
-        //    //    "Zebedane Zebediah M Purple 10/26/1982"
-        //    //};
-        //    Console.WriteLine("Start");
-
-        //    // Read each line of the the file, split the data by the delimiters, return the cleaned up string array
-        //    var recordList = helper.ReadFileAndSplitLines(filePath, delimArray).ToList();
-        //    // for each record data string array, add it to the list
-        //    recordList.ForEach(strArray => objectList.Add(new Record(strArray)));
-
-
-        //}
-
-
-
         [TestMethod]
         public void SafeStringTest()
         {
@@ -241,70 +217,5 @@ namespace RecordParserTests
             };
             Assert.AreEqual(expectedRecord.ToString(), testRecord.ToString());
         }
-
-        
-
-        //[TestMethod]
-        //public void Record_ParseDateString()
-        //{
-        //    var Record = new Record();
-        //    var date1 = Record.ParseDateString("10/26/1982");
-        //    var date2 = Record.ParseDateString("blahblahblah");
-        //    var date3 = Record.ParseDateString("1982-10-26T05:50:00");
-
-
-        //    Assert.AreEqual(new DateTime(1982, 10, 26), date1);
-        //    Assert.AreEqual(DateTime.MinValue, date2);
-        //    Assert.AreEqual(new DateTime(1982, 10, 26, 5, 50, 0), date3);
-        //}
-
-
-
-
-
-
-        //public string pipeTestData = " Lname | Fname | Gender | FColor | 8/25/1997 \n Emanl | Emanf | Redneg | Rolocf | 7/15/1989 ";
-        //public string commaTestData = "";
-        //public string spaceTestData = "";
-        //public string TestFilePath = "D:\\Users\\john.schwartz\\source\\repos\\RecordParser\\RecordParser\\RecordFile1.txt";
-
-        //[TestMethod]
-        //public void ReadFileLinesAtPath_FileExists()
-        //{
-        //    var helper = new ParseHelper();
-
-        //    Assert.IsTrue(File.Exists(TestFilePath));
-        //}
-
-        //[TestMethod]
-        //public void ReadFileLinesAtPath_StringEnumIsValid()
-        //{
-        //    var helper = new ParseHelper();
-
-        //    Assert.IsNotNull(helper.ReadFileLinesAtPath(TestFilePath));
-        //}
-
-
-        //[TestMethod]
-        //public void SafeString_NullSafe()
-        //{            
-        //    var result = RecordParser.Program.SafeString(null);
-
-        //    Assert.AreEqual(result, string.Empty);
-        //}
-
-        //[TestMethod]
-        //public void SafeString_TrimString()
-        //{
-        //    var testString = "   trimmed      ";
-        //    var result = RecordParser.Program.SafeString(testString);
-        //    Console.WriteLine(testString);
-        //    //Assert.AreEqual(result, "trimmed");
-        //}
-
-        // Can parse pipes and split to 5
-        // Can parse commas and split to 5
-        // Can parse spaces
-        // Can remove space, pipe, comma indiv values from 
     }
 }

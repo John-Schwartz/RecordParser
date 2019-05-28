@@ -109,11 +109,11 @@ namespace RecordParser
             var genderValue = stringArray.ElementAt(2);
             if (genderValue.StartsWith("m", true, CultureInfo.CurrentCulture)
                 || genderValue.StartsWith("f", true, CultureInfo.CurrentCulture)
-                //|| genderValue.StartsWith("M", true, CultureInfo.CurrentCulture)
-                //|| genderValue.StartsWith("F", true, CultureInfo.CurrentCulture)
-                ) return false;
+                || genderValue.StartsWith("M", true, CultureInfo.CurrentCulture)
+                || genderValue.StartsWith("F", true, CultureInfo.CurrentCulture)
+                ) return true;
 
-            return true;
+            return false;
         }
 
         // Split the input string by the delimiters, then run safestring on each split string item
