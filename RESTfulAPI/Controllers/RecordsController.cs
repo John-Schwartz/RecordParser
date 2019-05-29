@@ -62,7 +62,7 @@ namespace RESTfulAPI.Controllers
                 // if the Split/trimmed string array is not valid, return NotAcceptable
                 if (!Helper.StringCollectionIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
-                var newRecord = new Record(result);
+                var newRecord = Record.CreateRecord(result);
 
                 // if the string array is valid, add it to test data and return the full json
                 TestData.Add(newRecord);

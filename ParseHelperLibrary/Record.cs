@@ -7,25 +7,32 @@ namespace ParseHelperLibrary
 {
     public class Record
     {
-        public string LastName { get; set; }
-        public string FirstName { get; set; }
-        public string Gender { get; set; }
-        public string FavoriteColor { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string LastName      { get; private set; }
+        public string FirstName     { get; private set; }
+        public string Gender        { get; private set; }
+        public string FavoriteColor { get; private set; }
+        public DateTime DateOfBirth { get; private set; }
 
-        public Record() { }
+        private Record() { }
 
-        public Record(IEnumerable<string> stringFields)
+        private Record(IEnumerable<string> stringFields)
         {
-            if (stringFields != null)
-            {
                 LastName = stringFields.ElementAt(0);
                 FirstName = stringFields.ElementAt(1);
                 Gender = stringFields.ElementAt(2);
                 FavoriteColor = stringFields.ElementAt(3);
                 DateTime.TryParse(stringFields.ElementAt(4), out DateTime parsedDate);
-                DateOfBirth = parsedDate;
-            }
+                DateOfBirth = parsedDate;            
+        }
+
+        public static Record CreateRecord(IEnumerable<string> stringFields)
+        {
+            return stringFields == null ? new Record() : new Record(stringFields);
+        }
+
+        public static Record CreateRecord(string lastName, string firstName, string gender, string favoriteColor, string dob)
+        {
+            return new Record(new string[5] { lastName, firstName, gender, favoriteColor, dob });
         }
 
         // C# 6+ string interpolation: 

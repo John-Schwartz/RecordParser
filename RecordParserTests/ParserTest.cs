@@ -29,7 +29,7 @@ namespace RecordParserTests
             var recordList = new List<Record>();
 
             var test = helper.ReadFileAndSplitLines(new string[] { }).ToList(); // run with no input files
-            test.ForEach(strArray => recordList.Add(new Record(strArray)));
+            test.ForEach(strArray => recordList.Add(Record.CreateRecord(strArray)));
 
             var birthdateOut = helper.GetByBirthdate(recordList);
             
@@ -44,7 +44,7 @@ namespace RecordParserTests
             var recordList = new List<Record>();
 
             var test = helper.ReadFileAndSplitLines(new string[] { "InvalidFile1.txt", "InvalidFile2.txt", "InvalidFile3.txt", }).ToList(); // run with no input files
-            test.ForEach(strArray => recordList.Add(new Record(strArray)));
+            test.ForEach(strArray => recordList.Add(Record.CreateRecord(strArray)));
 
             var birthdateOut = helper.GetByBirthdate(recordList);
                         
@@ -59,9 +59,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
-                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
-                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
+                Record.CreateRecord(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                Record.CreateRecord(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                Record.CreateRecord(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var genderResult = helper.GetByGender(recordList);
@@ -79,9 +79,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
-                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
-                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
+                Record.CreateRecord(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                Record.CreateRecord(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                Record.CreateRecord(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var birthdateResult = helper.GetByBirthdate(recordList);
@@ -99,9 +99,9 @@ namespace RecordParserTests
 
             var recordList = new List<Record>
             {
-                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
-                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
-                new Record(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
+                Record.CreateRecord(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                Record.CreateRecord(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                Record.CreateRecord(new string[] {"Doe", "Jane", "FEM", "yello", "2/19/1942" })
             };
 
             var nameResult = helper.GetByLastname(recordList);
@@ -171,15 +171,9 @@ namespace RecordParserTests
         {
             var stringObject = new string[] { "Zebedane", "Zebediah", "M", "Purple", "10/26/1982" };
             var helper = new ParseHelper();
-            var testRecord = new Record(stringObject);
-            var expectedRecord = new Record
-            {
-                LastName = "Zebedane",
-                FirstName = "Zebediah",
-                Gender = "M",
-                FavoriteColor = "Purple",
-                DateOfBirth = new DateTime(1982, 10, 26)
-            };
+            var testRecord = Record.CreateRecord(stringObject);
+            var expectedRecord = Record.CreateRecord("Zebedane", "Zebediah", "M", "Purple", "10/26/1982");
+            
             Assert.AreEqual(expectedRecord.ToString(), testRecord.ToString());
         }
 

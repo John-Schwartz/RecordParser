@@ -114,12 +114,12 @@ namespace UnitTestProject1
         {
             return new List<Record>
             {
-                new Record(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
-                new Record(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
-                new Record(new string[] {"Does", "Jane", "FEM", "yello", "2/19/1942" }),
-                new Record(new string[] {"Cooper", "Sue", "F", "yello", "2/19/1942" }),
-                new Record(new string[] {"McCoy", "Mark", "male", "yello", "2/19/1942" }),
-                new Record(new string[] {"Danielson", "Jennifer", "Female", "yello", "2/19/1942" })
+                Record.CreateRecord(new string[] {"Smith", "Robert", "M", "Purple", "11/26/1992" }),
+                Record.CreateRecord(new string[] {"Zebedane", "Zebediah", "Male", "Purple", "10/26/1982" }),
+                Record.CreateRecord(new string[] {"Does", "Jane", "FEM", "yello", "2/19/1942" }),
+                Record.CreateRecord(new string[] {"Cooper", "Sue", "F", "yello", "2/19/1942" }),
+                Record.CreateRecord(new string[] {"McCoy", "Mark", "male", "yello", "2/19/1942" }),
+                Record.CreateRecord(new string[] {"Danielson", "Jennifer", "Female", "yello", "2/19/1942" })
             };
         }
 

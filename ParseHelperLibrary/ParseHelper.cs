@@ -38,29 +38,56 @@ namespace ParseHelperLibrary
         // Returns an empty string if any part fails.
         public string SafeString(object obj, bool trimString = true)
         {
-            if (trimString) return obj?.ToString().Trim() ?? string.Empty;
+            if (trimString)
+            {
+                return obj?.ToString().Trim() ?? string.Empty;
+            }
             return obj?.ToString() ?? string.Empty;
         }
 
-        // Takes an enumerable of file paths, parses all of the lines and returns a consolidated array
+        // Takes an enumerable of file paths, parses all of the lines and returns a consolidated array.
+        // Take the file paths and create a list of string collections on which to operate. For each filepath, 
+        // If the filepath is valid, read all the lines of the file, and parse them into a collection 
+        // of string values, then add them to the initial list of string collections to return.
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(IEnumerable<string> filePaths)
         {
-            var returnList = new List<IEnumerable<string>>();
-            foreach (string filePath in filePaths)
-            {                
-                if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath)) continue; // If the filepath is invalid or empty, skip it  
-                
-                string[] allLines = File.ReadAllLines(filePath); // using the filepath, read the file into an array of strings (one line per string)
-                                
-                foreach (string recordLine in allLines)                     
-                {                                                                               // For each line in the file
-                    if (string.IsNullOrWhiteSpace(recordLine)) continue;                        // if the line isn't empty or null,
-                    IEnumerable<string> stringCollection = SplitAndSafeStringLine(recordLine);  // split by the delimiter(s) and trim white space.
-                    if (stringCollection != null) returnList.Add(stringCollection);             // then add the string collection to the return list
+            return filePaths.Aggregate(new List<IEnumerable<string>>(), (rList, fp) =>
+            {
+                if (string.IsNullOrWhiteSpace(fp) || !File.Exists(fp))
+                {
+                    return new List<IEnumerable<string>>();
                 }
-            }
-            return returnList;
+                return File.ReadAllLines(fp).Aggregate(rList, (list, recordLine) =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(recordLine))
+                        {
+                            list.Add(SplitAndSafeStringLine(recordLine));
+                        }
+                        return list;
+                    });
+            });
         }
+        //foreach (string filePath in filePaths)
+        //{
+        //    // If the filepath is invalid or empty, skip it 
+        //    if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+        //    {
+        //        continue;
+        //    }
+        //    // using the filepath, read the file into an array of strings (one line per string)
+        //    List<string> allLines = File.ReadAllLines(filePath).ToList();
+
+        //    // For each line in the fileif the line isn't empty or null,split by the delimiter(s) 
+        //    // and trim white space. then add the string collection to the return list
+        //    foreach (string recordLine in allLines)                     
+        //    {                                                                               
+        //        if (string.IsNullOrWhiteSpace(recordLine)) continue;                        
+        //        IEnumerable<string> stringCollection = SplitAndSafeStringLine(recordLine);  
+        //        if (stringCollection.Count() == 5) returnList.Add(stringCollection);             
+        //    }
+        //}
+        //return returnList;
+        //}
         // Overload for individual files. Simply passes single-item enumerable
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath) => ReadFileAndSplitLines(new string[] { filePath });
 
@@ -68,17 +95,17 @@ namespace ParseHelperLibrary
         public bool StringCollectionIsValid(IEnumerable<string> stringArray)
         {
             if (stringArray == null) throw new ArgumentNullException();        // If the array is null, something has gone terribly wrong
-            
+
             var stringCollection = stringArray.ToList();
             if (stringCollection.Count() < 5                                   // Must have 5 values to match Record object's properties
                 || stringCollection.Any(str => string.IsNullOrWhiteSpace(str)) // No whitespace or null values
                 || ParseDateString(stringCollection[4]) == DateTime.MinValue   // Date must be parseable If result of TryParse returns Min, it failed
                 || !Regex.IsMatch(stringCollection[2], @"(?i)^(m|f)")          // gender field must start with f,F,m,M
                 ) return false;
-                        
+
             return true;
         }
-        
+
         // Split the input string by the delimiters, tossing empty values, then safestring each split string item
         // finally, return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
@@ -87,22 +114,6 @@ namespace ParseHelperLibrary
             if (!StringCollectionIsValid(stringRecordObject)) return new string[0];
             return stringRecordObject;
         }
-        //readonly List<char> delimiters = new List<char> { ' ', ',', '|' };
-        //internal IEnumerable<string> SplitAndSafeStringLine(string inputString)
-        //{// NOTE: Can't be internal if used by webAPI controller
-        //    var stringRecordObject = inputString.Split(delimiters.ToArray(), StringSplitOptions.None).ToList();
-        //    //stringRecordObject.ForEach(field => { field = SafeString(field); });
-        //    //stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrWhiteSpace(x));
-        //stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrWhiteSpace(x));
-        //var results = stringRecordObject.Where(str => str != " " || str != "|" || str != "," || !string.IsNullOrEmpty(str));
-
-        //    // Can't get List/array of char/string to work nicely and legibly. While not quite as concise as the attempt w/ readonly delim array, I believe this is legible and only slightly longer.
-        //    //var results = stringRecordObject.Where(s => !delimiters.ToList().Contains(s)).Select(s => SafeString(s));
-        //    var testResults = stringRecordObject.Select(str => SafeString(str)).Where(str => str != " " || str != "|" || str != "," || !string.IsNullOrWhiteSpace(str));
-
-        //    if (!StringCollectionIsValid(stringRecordObject)) return new string[0];
-        //    return stringRecordObject;
-        //}
 
         private DateTime ParseDateString(string dateString)
         {
