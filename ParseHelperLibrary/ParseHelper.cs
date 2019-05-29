@@ -23,7 +23,7 @@ namespace ParseHelperLibrary
             GetByLastname(RecordList).ForEach(x => Console.WriteLine(x.ToString()));
         }
 
-        // Query style linq for sorting by requirements: gender, dob, lastname
+        // Query-style linq for sorting by requirements: gender+lastname, dob, lastname
         public List<Record> GetByGender(IEnumerable<Record> RecordList) => (from p in RecordList
                                                                             orderby p.Gender, p.LastName ascending
                                                                             select p).ToList();
@@ -47,58 +47,45 @@ namespace ParseHelperLibrary
         {
             var returnList = new List<IEnumerable<string>>();
             foreach (string filePath in filePaths)
-            {
+            {                
+                if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath)) continue; // If the filepath is invalid or empty, skip it  
                 
-                if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath)) continue; // If the filepath is invalid or empty, skip it
-
-                // using the filepath, read the file into an array of strings (one line per string)
-                string[] allLines = File.ReadAllLines(filePath); 
-
-                // For each line in the file
-                foreach (string recordLine in allLines)
-                {                    
-                    if (string.IsNullOrEmpty(recordLine)) continue;         // if the line isn't empty or null,
-                    var stringArray = SplitAndSafeStringLine(recordLine);   // split by the delimiter(s) and trim white space.
-                    if (stringArray != null) returnList.Add(stringArray);   // then add the string array to the return list
+                string[] allLines = File.ReadAllLines(filePath); // using the filepath, read the file into an array of strings (one line per string)
+                                
+                foreach (string recordLine in allLines)                     
+                {                                                                               // For each line in the file
+                    if (string.IsNullOrWhiteSpace(recordLine)) continue;                        // if the line isn't empty or null,
+                    IEnumerable<string> stringCollection = SplitAndSafeStringLine(recordLine);  // split by the delimiter(s) and trim white space.
+                    if (stringCollection != null) returnList.Add(stringCollection.ToList());    // then add the string array to the return list
                 }
             }
-
             return returnList;
         }
-
-        // Overload to add functionality for individual files. Simply passes single-item enumerable
+        // Overload for individual files. Simply passes single-item enumerable
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(string filePath) => ReadFileAndSplitLines(new string[] { filePath });
 
-        // Checks the validity of the string array for making a Record. 
-        // Date must parse, gender must begin with f or m, and requires 5 data fields
+        // Checks the validity of the string array for making a Record.
         public bool StringCollectionIsValid(IEnumerable<string> stringArray)
         {
-            if (stringArray == null) throw new ArgumentNullException();
+            if (stringArray == null) throw new ArgumentNullException();        // If the array is null, something has gone terribly wrong
             
             var stringCollection = stringArray.ToList();
-            if (stringCollection.Count() < 5                                            // Must have 5 values to match Record object's properties
-                || !stringCollection.TrueForAll(str => !string.IsNullOrWhiteSpace(str)) // No whitespace or null values
-                || ParseDateString(stringCollection.ElementAt(4)) == DateTime.MinValue  // If result of TryParse returns Min, it failed
+            if (stringCollection.Count() < 5                                   // Must have 5 values to match Record object's properties
+                || stringCollection.Any(str => string.IsNullOrWhiteSpace(str)) // No whitespace or null values
+                || ParseDateString(stringCollection[4]) == DateTime.MinValue   // Date must be parseable If result of TryParse returns Min, it failed
+                || !Regex.IsMatch(stringCollection[2], @"(?i)^(m|f)")          // gender field must start with f,F,m,M
                 ) return false;
-
-            // If the gender starts with f or m, case independent, the collection is now valid.
-            // TODO: I believe the regex is off? verify, because it breaks here!
-            if (Regex.IsMatch(@"?is^(m|f)", stringCollection[2])) return true; 
-            
-            // Otherwise, collection is invalid
-            return false;
+                        
+            return true;
         }
-
-        readonly List<char> delimiters = new List<char> { ' ', ',', '|' };
-
-        // Split the input string by the delimiters, then run safestring on each split string item
-        // Remove any empty string, remaining delims or whitespace elements, then return the string array
+        
+        // Split the input string by the delimiters, tossing empty values, then safestring each split string item
+        // finally, return the string array
         public IEnumerable<string> SplitAndSafeStringLine(string inputString)
         {
-            var stringRecordObject = inputString.Split(new char[] { ' ', ',', '|' }, StringSplitOptions.None).ToList();
-            var results = stringRecordObject.Select(str => SafeString(str)).Where(str => str != " " || str != "|" || str != "," || !string.IsNullOrWhiteSpace(str));
-            if (!StringCollectionIsValid(results)) return new string[0];
-            return results;
+            var stringRecordObject = inputString.Split(new char[] { ' ', ',', '|' }, StringSplitOptions.RemoveEmptyEntries).Select(str => SafeString(str)).ToList();
+            if (!StringCollectionIsValid(stringRecordObject)) return new string[0];
+            return stringRecordObject;
         }
         //readonly List<char> delimiters = new List<char> { ' ', ',', '|' };
         //internal IEnumerable<string> SplitAndSafeStringLine(string inputString)
@@ -106,6 +93,8 @@ namespace ParseHelperLibrary
         //    var stringRecordObject = inputString.Split(delimiters.ToArray(), StringSplitOptions.None).ToList();
         //    //stringRecordObject.ForEach(field => { field = SafeString(field); });
         //    //stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrWhiteSpace(x));
+        //stringRecordObject.RemoveAll(x => x == " " || x == "|" || x == "," || string.IsNullOrWhiteSpace(x));
+        //var results = stringRecordObject.Where(str => str != " " || str != "|" || str != "," || !string.IsNullOrEmpty(str));
 
         //    // Can't get List/array of char/string to work nicely and legibly. While not quite as concise as the attempt w/ readonly delim array, I believe this is legible and only slightly longer.
         //    //var results = stringRecordObject.Where(s => !delimiters.ToList().Contains(s)).Select(s => SafeString(s));

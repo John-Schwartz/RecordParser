@@ -25,7 +25,7 @@ namespace ParseHelperLibrary
                 FavoriteColor = stringFields.ElementAt(3);
                 DateTime.TryParse(stringFields.ElementAt(4), out DateTime parsedDate);
                 DateOfBirth = parsedDate;
-            }            
+            }
         }
 
         // C# 6+ string interpolation: 

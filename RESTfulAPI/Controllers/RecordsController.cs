@@ -52,7 +52,7 @@ namespace RESTfulAPI.Controllers
             try
             {
                 // If the string is empty, return NotAcceptable
-                if (string.IsNullOrEmpty(inputString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
+                if (string.IsNullOrWhiteSpace(inputString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
 
                 var helper = new ParseHelper();
                 var result = helper.SplitAndSafeStringLine(inputString);

@@ -9,9 +9,11 @@ namespace RecordParser
     {
         public static void Main(string[] args)
         {
-            // if no args return
+            // if no filepath args passed, write why program failed and return
             if (args.Length == 0) {
-                Console.WriteLine("No filepath parameters passed to Main");
+                Console.WriteLine("No filepath parameters passed. Press any key to exit.");
+                Console.ReadKey();
+                return;
             }
 
             var objectList = new List<Record>();
