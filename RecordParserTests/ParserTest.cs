@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
 using ParseHelperLibrary;
+using System.IO;
 
 namespace RecordParserTests
 {
@@ -180,6 +181,30 @@ namespace RecordParserTests
                 DateOfBirth = new DateTime(1982, 10, 26)
             };
             Assert.AreEqual(expectedRecord.ToString(), testRecord.ToString());
+        }
+
+        [TestMethod]
+        public void ParseTextFilesTest()
+        {
+            var helper = new ParseHelper();
+            var currentDirectory = Directory.GetCurrentDirectory();
+            var filePathCollection = new string[] 
+            {
+                Path.Combine(currentDirectory,"RecordFile1.txt"),
+                Path.Combine(currentDirectory,"RecordFile2.txt"),
+                Path.Combine(currentDirectory,"RecordFile3.txt")
+            };
+
+            var listOfAllRecordStringCollections = helper.ReadFileAndSplitLines(filePathCollection);
+
+            Assert.IsNotNull(listOfAllRecordStringCollections);
+            Assert.AreEqual(15, listOfAllRecordStringCollections.Count());
+            foreach (IEnumerable<string> stringCollection in listOfAllRecordStringCollections)
+            {
+                Assert.IsNotNull(stringCollection);
+                Assert.IsFalse(stringCollection.Any(sc => string.IsNullOrWhiteSpace(sc)));
+                Assert.AreEqual(5, stringCollection.Count());
+            }
         }
     }
 }

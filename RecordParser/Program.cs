@@ -10,7 +10,8 @@ namespace RecordParser
         public static void Main(string[] args)
         {
             // if no filepath args passed, write why program failed and return
-            if (args.Length == 0) {
+            if (!args.Any())
+            {
                 Console.WriteLine("No filepath parameters passed. Press any key to exit.");
                 Console.ReadKey();
                 return;
@@ -25,8 +26,10 @@ namespace RecordParser
             // for each record data string array, add to list
             recordList.ForEach(strArray => objectList.Add(new Record(strArray)));
 
-            // Outputs sorted with linq then call Console.WriteLine on the formatted string;
+            // Print results according to specified sort orders
             helper.PrintResults(objectList);
+
+            Console.ReadKey();
         }
     }
 }

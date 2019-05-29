@@ -56,7 +56,7 @@ namespace ParseHelperLibrary
                 {                                                                               // For each line in the file
                     if (string.IsNullOrWhiteSpace(recordLine)) continue;                        // if the line isn't empty or null,
                     IEnumerable<string> stringCollection = SplitAndSafeStringLine(recordLine);  // split by the delimiter(s) and trim white space.
-                    if (stringCollection != null) returnList.Add(stringCollection.ToList());    // then add the string array to the return list
+                    if (stringCollection != null) returnList.Add(stringCollection);             // then add the string collection to the return list
                 }
             }
             return returnList;

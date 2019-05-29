@@ -12,32 +12,33 @@ namespace RESTfulAPI.Controllers
     public class RecordsController : ApiController
     {
 
-        public ParseHelper Helper = new ParseHelper();
-        public static List<Record> TestData;
+        private ParseHelper Helper = new ParseHelper();
+        private static List<Record> TestData;
 
-        public RecordsController()
-        {
-            TestData = new List<Record>();
+        public RecordsController() => TestData = new List<Record>();
 
-        }
-
+        // Default get returns full unsorted JSON collection of test data
         public string Get() => JsonConvert.SerializeObject(TestData);
 
 
+        // Returns JSON of full test list, sorted by the search word, 
+        // or unsorted if passed an unrecognized search value
         [System.Web.Http.Route("Api/Records/{searchWord}")]
         public string Get(string searchWord)
         {
-            var helper = new ParseHelper();
             switch (searchWord.ToLowerInvariant())
             {
+                // GET: ../records/gender
                 case "gender":
-                    return JsonConvert.SerializeObject(helper.GetByGender(TestData));
+                    return JsonConvert.SerializeObject(Helper.GetByGender(TestData));
 
+                // GET: ../records/birthdate
                 case "birthdate":
-                    return JsonConvert.SerializeObject(helper.GetByBirthdate(TestData));
+                    return JsonConvert.SerializeObject(Helper.GetByBirthdate(TestData));
 
+                // GET: ../records/name
                 case "name":
-                    return JsonConvert.SerializeObject(helper.GetByLastname(TestData));
+                    return JsonConvert.SerializeObject(Helper.GetByLastname(TestData));
 
                 default: return JsonConvert.SerializeObject(TestData);
             }
@@ -45,6 +46,7 @@ namespace RESTfulAPI.Controllers
         }
 
         // Request body media type text e.g.: Downy | Robert | M | Purple | 11/26/1992
+        // POST: ../records/
         [HttpPost]
         public HttpResponseMessage Post([FromBody] string inputString)
         {
@@ -54,11 +56,11 @@ namespace RESTfulAPI.Controllers
                 // If the string is empty, return NotAcceptable
                 if (string.IsNullOrWhiteSpace(inputString)) return RequestNotAcceptable("Invalid record string. String is null or empty.");
 
-                var helper = new ParseHelper();
-                var result = helper.SplitAndSafeStringLine(inputString);
+                // Split the input string by the expected delimiters and clean up output
+                IEnumerable<string> result = Helper.SplitAndSafeStringLine(inputString);
 
                 // if the Split/trimmed string array is not valid, return NotAcceptable
-                if (!helper.StringCollectionIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
+                if (!Helper.StringCollectionIsValid(result)) return RequestNotAcceptable("Invalid record string. One or more data fields are missing or empty.");
 
                 var newRecord = new Record(result);
 
