@@ -84,9 +84,9 @@ namespace ParseHelperLibrary
             // Take the file paths and create a list of string collections in which to aggregate successfully split lines. 
             return filePaths.Aggregate(new List<IEnumerable<string>>(), (rList, fp) =>
             {
-                if (File.Exists(fp))
+                if (string.IsNullOrWhiteSpace(fp) || !File.Exists(fp))
                 {
-                    return Enumerable.Empty<IEnumerable<string>>().ToList();//new List<IEnumerable<string>>();
+                    return Enumerable.Empty<IEnumerable<string>>().ToList();
                 }
                 // if the file path is valid, read all the lines and split them into a collection of 
                 // string values, adding them to the aggregate list
