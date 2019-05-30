@@ -13,5 +13,7 @@ parsed records from the session.
 
 API will respond 406 Not Acceptable if the record information is invalid.
 
+You can also go to /api/Records/gender, /api/Records/birthdate, /api/Records/name to get sorted JSON output of records.
+
 Test Cases:
 To run the test cases, open the solution in visual studio. Open the Text Explorer window with the toolbar menu "Test > Windows > Test Explorer," then click "Run All" in the top left corner.
