@@ -24,7 +24,7 @@ namespace RecordParser
             var recordList = helper.ReadFileAndSplitLines(args).ToList();
 
             // for each record data string array, add to list
-            recordList.ForEach(strArray => objectList.Add(Record.CreateRecord(strArray)));
+            recordList.ForEach(strCollection => objectList.Add(Record.CreateRecord(strCollection)));
 
             // Print results according to specified sort orders
             helper.PrintResults(objectList);

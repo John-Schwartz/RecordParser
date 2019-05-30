@@ -25,18 +25,31 @@ namespace ParseHelperLibrary
                 DateOfBirth = parsedDate;            
         }
 
+        /// <summary>
+        /// Static factory method for creating a Record object with a valid string data enumerable
+        /// </summary>
+        /// <param name="stringFields">Enumerable of strings containing record information</param>
         public static Record CreateRecord(IEnumerable<string> stringFields)
         {
             return stringFields == null ? new Record() : new Record(stringFields);
         }
 
+        /// <summary>
+        /// Static factory method overload for creating a Record object with separate parameters rather than an enumerable
+        /// </summary>
+        /// <param name="lastName">Last Name</param>
+        /// <param name="firstName">First Name</param>
+        /// <param name="gender">Gender</param>
+        /// <param name="favoriteColor">Favorite Color</param>
+        /// <param name="dob">Date of Birth</param>
         public static Record CreateRecord(string lastName, string firstName, string gender, string favoriteColor, string dob)
         {
             return new Record(new string[5] { lastName, firstName, gender, favoriteColor, dob });
         }
 
-        // C# 6+ string interpolation: 
-        // Override object ToString to return nicely formatted string
+        /// <summary>
+        /// Override of ToString to return nicely formatted string of record data. C# 6 interpolation.
+        /// </summary>
         public override string ToString()
         {
             return $"{LastName}, {FirstName}, {Gender}, {FavoriteColor}, {DateOfBirth.ToString("M/d/yyyy")}";
