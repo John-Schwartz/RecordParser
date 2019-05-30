@@ -74,20 +74,19 @@ namespace ParseHelperLibrary
         }
 
         /// <summary>
-        /// Takes an enumerable of file paths, reads and parses all of the lines into enumerables
-        /// of record data as strings, then aggregates the record string collections into a 
-        /// single list ("jagged list," list of enumerables)
+        /// Takes a collection of file paths, parsing the files found to exist and conform, returning a consolidated collection of string collections to process.
         /// </summary>
-        /// <param name="filePaths">enumerable of file paths for parsing.</param>
-        /// <returns>A list of string enumerables</returns>
+        /// <param name="filePaths">Collection of one or more file paths for processing.</param>
+        /// <returns>A collection of string collections ("jagged" collection) for further processing</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="filePaths" /> is null.</exception>
         public IEnumerable<IEnumerable<string>> ReadFileAndSplitLines(IEnumerable<string> filePaths)
         {
             // Take the file paths and create a list of string collections in which to aggregate successfully split lines. 
             return filePaths.Aggregate(new List<IEnumerable<string>>(), (rList, fp) =>
             {
-                if (string.IsNullOrWhiteSpace(fp) || !File.Exists(fp))
+                if (File.Exists(fp))
                 {
-                    return new List<IEnumerable<string>>();
+                    return Enumerable.Empty<IEnumerable<string>>().ToList();//new List<IEnumerable<string>>();
                 }
                 // if the file path is valid, read all the lines and split them into a collection of 
                 // string values, adding them to the aggregate list

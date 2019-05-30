@@ -12,7 +12,7 @@ namespace RecordParser
             // if no filepath args passed, write why program failed and return
             if (!args.Any())
             {
-                Console.WriteLine("No filepath parameters passed. Press any key to exit.");
+                Console.WriteLine("No file path parameters passed. Press any key to exit.");
                 Console.ReadKey();
                 return;
             }
