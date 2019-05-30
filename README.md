@@ -12,3 +12,6 @@ API Will respond 202 Accepted if line is successfully parsed, and will contain t
 parsed records from the session.
 
 API will respond 406 Not Acceptable if the record information is invalid.
+
+Test Cases:
+To run the test cases, open the solution in visual studio. Open the Text Explorer window with the toolbar menu "Test > Windows > Test Explorer," then click "Run All" in the top left corner.
